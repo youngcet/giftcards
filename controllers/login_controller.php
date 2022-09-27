@@ -15,6 +15,8 @@
             $pwd = App\Custom\Utils::EncryptStringMd5 ($pwd);
 
             $dbhandler = new DatabaseHandler();
+
+			// check if user exists in all tables (admin, staff, seller)
             $selectuser = $dbhandler->prepareStatement (CHECK_USER);
             if (App\Custom\Error::IsAnError ($selectuser))
             {
@@ -28,6 +30,8 @@
             }
 
             $record = $dbhandler->fetchAll();
+
+			// if does not exist return error
             if (empty ($record))
             {
                 return new App\Custom\Error (-1, App\Constants::LOGIN_FAILED_MSG);

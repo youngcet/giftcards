@@ -42,7 +42,7 @@
 		{
 			return $this->_dbconn;
 		}
-        
+		
 
 
 		/**
@@ -78,7 +78,7 @@
 
 		public function executeStatement ($values, $valueType)
 		{
-		    if (! empty($values) && ! empty ($valueType)) $this->_stmt->bind_param ($valueType, ...$values);
+			if (! empty($values) && ! empty ($valueType)) $this->_stmt->bind_param ($valueType, ...$values);
 		
 			if (! $this->isConnected() || ! $this->_stmt->execute())
 			{
@@ -103,12 +103,12 @@
 
 		public function fetchRow()
 		{
-		    $results = array();
+			$results = array();
 			if ($this->_results->num_rows === 0)
 			{
 				return $results;
 			}
-            
+			
 			return $this->_results->fetch_assoc();;
 		}
 		
@@ -124,10 +124,10 @@
 
 		public function fetchAll()
 		{
-		    $results = array();
-		    $results = $this->_results->fetch_all (MYSQLI_ASSOC);
-		    mysqli_free_result ($this->_results);
-		    
+			$results = array();
+			$results = $this->_results->fetch_all (MYSQLI_ASSOC);
+			mysqli_free_result ($this->_results);
+			
 			return $results;
 		}
 
