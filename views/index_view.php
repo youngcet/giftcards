@@ -151,6 +151,7 @@
 				$totalcards = $this->controller->GetTotalGiftCards ($_SESSION['userid']);
 				
 				$data['{user.modal.title}'] = ucfirst (App\Constants::STAFF);
+				$chartdata = '';
 				
 				$totgiftcards = $totalearnings = 0;
 				foreach ($allstaff as $staff)
@@ -174,11 +175,15 @@
 							'{staff.totalcards.sold}'=> $qtysold,
 							'{staff.sales}'=> $earnings,
 						);
+					
+					$name = $staff['fname'].' '.$staff['lname'];
+					$chartdata .= "['$name', $earnings],";
 				}
 
 				$data['{total.staff}'] = count ($allstaff);
 				$data['{total.earnings}'] = $totalearnings;
 				$data['{total.giftcards}'] = $totgiftcards;
+				$data['{dougnut.chart}'] = $chartdata;
 			}
 			
 			if ($userrole == App\Constants::STAFF)
