@@ -4,8 +4,8 @@ DATABASE SETUP
 
 Change database details in this file: lib/MySQL/Database.php
 
-Import files to create database tables and data imports
-conf/MySQL/
+Import the file below to create the database, tables, and import data
+conf/MySQL/database.sql
 
 #######################################################################
 
