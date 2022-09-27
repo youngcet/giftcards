@@ -36,10 +36,11 @@
                 else
                 {
                     $userdata = $this->controller->GetUserData();
-                    $_SESSION['userid'] = $userdata[0]['id'];
+                    $_SESSION['userid'] = $userdata[0]['userid'];
                     $_SESSION['useremail'] = $userdata[0]['email'];
                     $_SESSION['fname'] = $userdata[0]['fname'];
                     $_SESSION['lname'] = $userdata[0]['lname'];
+                    $_SESSION['role'] = $userdata[0]['role'];
                    
                     header ('Location: index');
                     die();

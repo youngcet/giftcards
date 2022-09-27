@@ -1,0 +1,2 @@
+curl -X POST http://localhost/giftcards/api/addgiftcards -H 'Content-Type: application/json' -d '{"seller_id":"1","staff_id":"2","qty":"2"}'
+

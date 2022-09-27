@@ -140,11 +140,11 @@
 							{
 								return new Error (-1, sprintf ('%s\Error: Array [%s] not defined', $this->_classname, $listsInString[1][$h]));
 							}
-
+							
 							foreach ($this->Iterator ($data[$listsInString[1][$h]]) as $dataArray)
 							{
 								$textToSubstitute = trim ($this->SubstStringData ($listSection[0], array ($htmlList => '', '=%>' => '')));
-
+								
 								if (preg_match ("/$startpattern/", $textToSubstitute)) $textToSubstitute = $this->CompileExecutableCode ($textToSubstitute, $dataArray);
 								if (! empty ($textToSubstitute)) $listContent .= $this->SubstStringData ($textToSubstitute, $dataArray);
 							}

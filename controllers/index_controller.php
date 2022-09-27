@@ -68,7 +68,7 @@
             return $record;
         }
 
-        public function CreateUser ($role, $name, $email, $password, $admin_id)
+        public function CreateUser ($role, $name, $email, $password, $id)
         {
             $fullname = explode (' ', $name);
             $fname = trim ($fullname[0]);
@@ -78,14 +78,14 @@
 
             $dbhandler = new DatabaseHandler();
 
-            if ($role == App\Constants::ADMIN) $selectadminuser = $dbhandler->prepareStatement (SELECT_STAFF_BY_EMAIL_ADMIN);
+            $selectadminuser = $dbhandler->prepareStatement (CHECK_IF_EMAIL_EXISTS);
             
             if (App\Custom\Error::IsAnError ($selectadminuser))
             {
                 return $selectadminuser;
             }
 
-            $selectadminuser = $dbhandler->executeStatement ([$email, $admin_id], 'si');
+            $selectadminuser = $dbhandler->executeStatement ([$email], 's');
             if (App\Custom\Error::IsAnError ($selectadminuser))
             {
                 return $selectadminuser;
@@ -94,17 +94,25 @@
             $record = $dbhandler->fetchAll();
             if (empty ($record))
             {
-                $insertadminuser = $dbhandler->prepareStatement (INSERT_STAFF_MEMBER);
+                if ($role == App\Constants::ADMIN) $insertadminuser = $dbhandler->prepareStatement (INSERT_STAFF_MEMBER);
+                if ($role == App\Constants::STAFF) $insertadminuser = $dbhandler->prepareStatement (INSERT_SELLER_MEMBER);
+
                 if (App\Custom\Error::IsAnError ($insertadminuser))
                 {
                     return $insertadminuser;
                 }
 
-                $insertadminuser = $dbhandler->executeStatement ([$admin_id, $fname, $lname, $email, $pwd], 'issss');
+                $insertadminuser = $dbhandler->executeStatement ([$id, $fname, $lname, $email, $pwd], 'issss');
                 if (App\Custom\Error::IsAnError ($insertadminuser))
                 {
                     return $insertadminuser;
                 }
+
+                // if ($role == App\Constants::STAFF)
+                // {
+                //     $sql = $dbhandler->prepareStatement (INSERT_SELLER_IN_GIFTCARDS);
+                //     $sql = $dbhandler->executeStatement ([$id, $fname, $lname, $email, $pwd], 'issss');
+                // }
             }
             else
             {
@@ -114,6 +122,101 @@
             $dbhandler->closeConnection();
             
             return 1;
+        }
+
+        public function GetAllStaffGiftCards ($id)
+        {
+            $sql = $this->db_handler->prepareStatement (SELECT_ALL_STAFF_GIFTCARDS);
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $sql = $this->db_handler->executeStatement ([$id], 'i');
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $record = $this->db_handler->fetchRow();
+            
+            return $record;
+        }
+
+        public function GetAllSellers ($id)
+        {
+            $allsellers = $this->db_handler->prepareStatement (SELECT_ALL_SELLERS);
+            if (App\Custom\Error::IsAnError ($allsellers))
+            {
+                return $allsellers;
+            }
+
+            $allsellers = $this->db_handler->executeStatement ([$id], 'i');
+            if (App\Custom\Error::IsAnError ($allsellers))
+            {
+                return $allsellers;
+            }
+
+            $record = $this->db_handler->fetchAll();
+           
+            return $record;
+        }
+
+        public function GetTotalSellerEarnings ($id)
+        {
+            $sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_EARNINGS);
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $sql = $this->db_handler->executeStatement ([$id], 'i');
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $record = $this->db_handler->fetchAll();
+
+            return $record;
+        }
+
+        public function GetTotalSellerGiftCards ($id)
+        {
+            $sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_GIFTCARDS_TOTAL);
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $sql = $this->db_handler->executeStatement ([$id], 'i');
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $record = $this->db_handler->fetchRow();
+
+            return $record;
+        }
+
+        public function GetAllSellerGiftCards ($id)
+        {
+            $sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_GIFTCARDS_TOTAL);
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $sql = $this->db_handler->executeStatement ([$id], 'i');
+            if (App\Custom\Error::IsAnError ($sql))
+            {
+                return $sql;
+            }
+
+            $record = $this->db_handler->fetchRow();
+
+            return $record;
         }
     }
 ?>

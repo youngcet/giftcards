@@ -19,13 +19,7 @@
             $data[App\Constants::ERROR_NOTIFICATION_HTML] = '';
             $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = '';
 
-            $userrole = getUserRole();
-            if (App\Custom\Error::IsAnError ($userrole))
-            {
-                // handle error
-                die ('something went wrong!'); // gets error message
-                // $htmlstring->GetCode(); // gets error code
-            }
+            $userrole = $_SESSION['role'];
 
             $data['{user.role}'] = $userrole;
             $data['{ucfirst.user.role}'] = ucfirst ($userrole);
@@ -72,20 +66,64 @@
                 $totalcards = $this->controller->GetTotalGiftCards ($_SESSION['userid']);
                 
                 $data['{user.modal.title}'] = ucfirst (App\Constants::STAFF);
-
-                $data['{total.staff}'] = count ($allstaff);
-                $data['{total.earnings}'] = 0;
-                $data['{total.giftcards}'] = $totalcards[0]['totalcards'];
                 
+                $totgiftcards = $totalearnings = 0;
                 foreach ($allstaff as $staff)
                 {
+                    $record = $this->controller->GetAllStaffGiftCards ($staff['id']);
+                    $qty = (empty ($record)) ? 0 : $record['qty'];
+                    $qtysold = (empty ($record)) ? 0 : $record['qty_sold'];
+                    $totgiftcards += $qty;
+                    $totalearnings += $qtysold;
+
                     $data['users'][] = array
                         (
                             '{staff.name}' => $staff['fname'] . ' '.$staff['lname'],
                             '{staff.email}' => $staff['email'],
-                            '{staff.totalcards}'=> 0,
+                            '{staff.id}' => $staff['id'],
+                            '{staff.totalcards}'=> $qty,
+                            '{staff.totalsellers}' => count ($this->controller->GetAllSellers ($staff['id'])),
                             '{staff.totalcards.sold}'=> 0,
                             '{staff.sales}'=> 0,
+                        );
+                }
+
+                $data['{total.staff}'] = count ($allstaff);
+                $data['{total.earnings}'] = $totalearnings;
+                $data['{total.giftcards}'] = $totgiftcards;
+                $data['sellers'] = array();
+            }
+            
+            if ($userrole == App\Constants::STAFF)
+            {
+                $data['users'] = array();
+                $data['sellers'] = array();
+
+                $data['{user.modal.title}'] = ucfirst (App\Constants::SELLER);
+
+                $allsellers = $this->controller->GetAllSellers ($_SESSION['userid']);
+                $earnings = $this->controller->GetTotalSellerEarnings ($_SESSION['userid']);
+                $totalcards = $this->controller->GetTotalSellerGiftCards ($_SESSION['userid']);
+
+                $totalearnings = (empty ($earnings[0]['earnings'])) ? 0 : $earnings[0]['earnings'];
+                $totgiftcards = (empty ($totalcards['qty'])) ? 0 : $totalcards['qty'];
+
+                $data['{total.sellers}'] = count ($allsellers);
+                $data['{total.earnings}'] = $totalearnings;
+                $data['{total.giftcards}'] = $totgiftcards;
+
+                foreach ($allsellers as $seller)
+                {
+                    $sellergiftcards = $this->controller->GetAllSellerGiftCards ($seller['id']);
+
+                    $data['sellers'][] = array
+                        (
+                            '{seller.name}' => $seller['fname'] . ' '.$seller['lname'],
+                            '{seller.email}' => $seller['email'],
+                            '{seller.id}' => $seller['id'],
+                            '{seller.totalcards}'=> $sellergiftcards['qty'],
+                            '{seller.totalcards.sold}'=> 0,
+                            '{seller.sales}'=> 0,
                         );
                 }
             }
@@ -103,6 +141,13 @@
 
             echo $htmlstring;
             
+        }
+
+        public function GetStaffSales ($cards)
+        {
+            $totalsales = 0;
+            foreach ($cards as $card) $totalsales += $card['price'];
+            return $totalsales;
         }
 
     }

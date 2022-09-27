@@ -1,5 +1,18 @@
 <?php
 
+	/**
+	 * Database Object
+	 *
+	 * This class connects to the database
+	 *
+	 * @category   MySQL
+	 * @package    Database
+	 * @author     Cedric Maenetja <cedricm@permanentlink.co.za>
+	 * @copyright  2022 Permanent Link CO
+	 * @license    Permanent Link CO
+	 * @version    Release: 1.0
+	 */
+
 	class Database
 	{
 		private $servername;

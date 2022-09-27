@@ -18,7 +18,7 @@
             $pwd = App\Custom\Utils::EncryptStringMd5 ($password);
 
             $dbhandler = new DatabaseHandler();
-            $selectadminuser = $dbhandler->prepareStatement (SELECT_ADMIN_USER_BY_EMAIL);
+            $selectadminuser = $dbhandler->prepareStatement (CHECK_IF_EMAIL_EXISTS);
             if (App\Custom\Error::IsAnError ($selectadminuser))
             {
                 return $selectadminuser;

@@ -23,6 +23,13 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+    <style>
+        .table td {
+            padding: 1rem !important;
+            vertical-align: top !important;
+            border-top: 1px solid #e8eef3 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -54,7 +61,7 @@
                     <!-- ============================================================== -->
                     <div class="navbar-brand">
                         <!-- Logo icon -->
-                        <a href="index.html">
+                        <a href="/">
                             <b class="logo-icon">
                                 <!-- Dark Logo icon -->
                                 <img src="src/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
@@ -130,23 +137,6 @@
                                 <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
                                         class="svg-icon mr-2 ml-1"></i>
                                     My Profile</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="credit-card"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    My Balance</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="mail"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Inbox</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="settings"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Account Setting</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="?logout"><i data-feather="power"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Logout</a>
-                                <div class="dropdown-divider"></div>
-                                <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
-                                        Profile</a></div>
                             </div>
                         </li>
                         <!-- ============================================================== -->
@@ -169,32 +159,37 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <!--php-code 
-                            return ('{user.role}' === 'admin') ? '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="#"
-                            aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
-                                class="hide-menu">Dashboard</span></a></li>
-                            <li class="list-divider"></li>
-                            <li class="nav-small-cap"><span class="hide-menu">Staff</span></li>
+                            if ('{user.role}' === 'admin') 
+                            {
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="#"
+                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                    class="hide-menu">Dashboard</span></a></li>
+                                <li class="list-divider"></li>
+                                <li class="nav-small-cap"><span class="hide-menu">Staff</span></li>
 
-                            <li class="sidebar-item"> <a class="sidebar-link" href=""
-                                    aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                        class="hide-menu">Staff List 
-                                    </span></a>
-                            </li>
-                            <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
-                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                    class="hide-menu">Add New Staff
-                                </span></a>
-                            </li>' : '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/"
-                            aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
-                                class="hide-menu">Dashboard</span></a></li>
-                            <li class="list-divider"></li>
-                            <li class="nav-small-cap"><span class="hide-menu">Gift Cards</span></li>
+                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                            class="hide-menu">Staff List 
+                                        </span></a>
+                                </li>';
+                            }
+                        endcode-->
 
-                            <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
-                                    aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                        class="hide-menu">Create New Gift Card
-                                    </span></a>
-                            </li>';
+                        <!--php-code 
+                            if ('{user.role}' === 'staff') 
+                            {
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="#"
+                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                    class="hide-menu">Dashboard</span></a></li>
+                                <li class="list-divider"></li>
+                                <li class="nav-small-cap"><span class="hide-menu">Sellers</span></li>
+
+                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                            class="hide-menu">Sellers List 
+                                        </span></a>
+                                </li>';
+                            }
                         endcode-->
                         
                         <li class="list-divider"></li>
@@ -360,6 +355,59 @@
                         </div>';
                     }
                 endcode-->
+
+                <!--php-code 
+                    if ('{user.role}' === 'staff')
+                    {
+                        return '<div class="card-group">
+                            <div class="card border-right">
+                                <div class="card-body">
+                                    <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                        <div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <h2 class="text-dark mb-1 font-weight-medium">{total.sellers}</h2>
+                                            </div>
+                                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">All Sellers</h6>
+                                        </div>
+                                        <div class="ml-auto mt-md-3 mt-lg-0">
+                                            <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card border-right">
+                                <div class="card-body">
+                                    <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                        <div>
+                                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup
+                                                    class="set-doller">$</sup>{total.earnings}</h2>
+                                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Earnings
+                                            </h6>
+                                        </div>
+                                        <div class="ml-auto mt-md-3 mt-lg-0">
+                                            <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card border-right">
+                                <div class="card-body">
+                                    <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                        <div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <h2 class="text-dark mb-1 font-weight-medium">{total.giftcards}</h2>
+                                            </div>
+                                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Gift Cards</h6>
+                                        </div>
+                                        <div class="ml-auto mt-md-3 mt-lg-0">
+                                            <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>';
+                    }
+                endcode-->
                 
                 <!-- *************************************************************** -->
                 <!-- End First Cards -->
@@ -381,20 +429,7 @@
                                     return '<div class="card-body">
                                         <div class="d-flex align-items-center mb-4">
                                             <h4 class="card-title">Staff List</h4>
-                                            <div class="ml-auto">
-                                                <div class="dropdown sub-dropdown">
-                                                    <button class="btn btn-link text-muted dropdown-toggle" type="button"
-                                                        id="dd1" data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        <i data-feather="more-vertical"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1">
-                                                        <a class="dropdown-item" href="#">Create Staff</a>
-                                                        <a class="dropdown-item" href="#">Update Staff</a>
-                                                        <a class="dropdown-item" href="#">Delete Staff</a>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table no-wrap v-middle mb-0">
@@ -402,12 +437,11 @@
                                                     <tr class="border-0">
                                                         <th class="border-0 font-14 font-weight-medium text-muted">
                                                         </th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Sellers
+                                                        </th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Gift Cards
                                                         </th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Total Gift Cards Sold</th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted text-center">
-                                                            Status
-                                                        </th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Total Sales</th>
                                                     </tr>
                                                 </thead>
@@ -416,14 +450,16 @@
                                                         <tr>
                                                             <td class="border-top-0 px-2 py-4">
                                                                 <h5 class="text-dark mb-0 font-16 font-weight-medium"> {staff.name}</h5>
-                                                                        <span class="text-muted font-14">{staff.email}</span>
+                                                                <span class="text-muted font-14">{staff.email}</span><br/>
+                                                                <form id="updateform"><input type="hidden" name="id"><input type="hidden" name="tbl"><input type="submit" style="border:none;width:25%;float:left;margin-top:10px" title="Update Staff" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="update"></form>
+                                                                <form id="deleteform"><input type="hidden" name="id"><input type="hidden" name="tbl">
+                                                                <input type="submit" style="border:none;width:25%;float:left;margin-top:10px" title="Delete Staff" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block" value="delete"></form>
                                                             </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">0</td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">0</td>
-                                                            <td class="border-top-0 text-center px-2 py-4"><i
-                                                                    class="fa fa-circle text-primary font-12" data-toggle="tooltip"
-                                                                    data-placement="top" title="In Testing"></i></td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalsellers}</td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalcards}</td>
                                                             <td class="font-weight-medium text-dark border-top-0 px-2 py-4">$0
+                                                            </td>
+                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${staff.sales}
                                                             </td>
                                                         </tr>
                                                     =%>
@@ -434,6 +470,47 @@
                                 } 
                             endcode-->
                             
+                            <!--php-code 
+                                if ('{user.role}' === 'staff')
+                                {
+                                    return '<div class="card-body">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <h4 class="card-title">Sellers List</h4>
+                                            
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table no-wrap v-middle mb-0">
+                                                <thead>
+                                                    <tr class="border-0">
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">
+                                                        </th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Gift Cards
+                                                        </th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Gift Cards Sold</th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Sales</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <%=list dataset="sellers"
+                                                        <tr>
+                                                            <td class="border-top-0 px-2 py-4">
+                                                                <h5 class="text-dark mb-0 font-16 font-weight-medium"> {seller.name}</h5>
+                                                                <span class="text-muted font-14">{seller.email}</span><br/>
+                                                                <form id="updateform"><input type="hidden" name="id"><input type="hidden" name="tbl"><input type="submit" style="border:none;width:30%;float:left;margin-top:10px" title="Update Staff" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="update"></form>
+                                                                <input type="submit" style="border:none;width:30%;float:left;margin-top:10px" title="Delete Staff" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block" value="delete"></form>
+                                                            </td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14"><form id="addgiftcardsform"><input value="{seller.totalcards}" class="form-control" name="giftcardsno" type="number"><input type="hidden" name="id"><input type="hidden" name="tbl"><input type="submit" style="border:none;width:30%;float:left;margin-top:10px" title="Add GiftCards" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="add >"></form></td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{seller.totalcards.sold}</td>
+                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${seller.sales}
+                                                            </td>
+                                                        </tr>
+                                                    =%>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>';
+                                } 
+                            endcode-->
                         </div>
                     </div>
                     

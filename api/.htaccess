@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+ 
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule ^addgiftcards(.*)$ ./updategiftcards.php
+RewriteRule ^products/(.*)$ ./products.php?id=$1
+RewriteRule ^product/(.*)$ ./product.php?id=$1
+RewriteRule ^activebatches(.*)$ ./activecomms.php

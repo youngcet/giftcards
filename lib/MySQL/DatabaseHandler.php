@@ -2,6 +2,19 @@
 	
 	require_once ("Database.php");
 
+	/**
+	 * Database Handler
+	 *
+	 * This class prepares and executes sql queries. 
+	 *
+	 * @category   MySQL
+	 * @package    DatabaseHandler
+	 * @author     Cedric Maenetja <cedricm@permanentlink.co.za>
+	 * @copyright  2022 Permanent Link CO
+	 * @license    Permanent Link CO
+	 * @version    Release: 1.0
+	 */
+
 	class DatabaseHandler extends Database
 	{
 		private $_dbconn;
@@ -16,12 +29,32 @@
 			$this->_error = $this->_results = array();
 		}
 
-		public function isConnected (): object
+
+
+		/**
+		 * Connects to the database
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return database object
+		 */ 
+
+		public function isConnected ()
 		{
 			return $this->_dbconn;
 		}
         
-		public function prepareStatement ($sqlStatement): bool
+
+
+		/**
+		 * Prepares SQL query
+		 *
+		 * @param string  	$sqlStatement The SQL Prepared Statement
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return 1 or an App\Custom\Error
+		 */ 
+
+		public function prepareStatement ($sqlStatement)
 		{
 			if (! $this->isConnected() || ! $this->_stmt = $this->_dbconn->prepare ($sqlStatement))
 			{
@@ -31,7 +64,19 @@
 			return 1;
 		}
 
-		public function executeStatement ($values, $valueType): bool
+
+
+		/**
+		 * Executes a SQL query and bind the values
+		 *
+		 * @param string  	$values The values to pass to the SQL query
+		 * @param array 	$valueType 	The binding string
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return @return 1 or an App\Custom\Error
+		 */ 
+
+		public function executeStatement ($values, $valueType)
 		{
 		    if (! empty($values) && ! empty ($valueType)) $this->_stmt->bind_param ($valueType, ...$values);
 		
@@ -47,7 +92,16 @@
 
 		}
 
-		public function fetchRow(): array
+
+
+		/**
+		 * Fetch a single row of data
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return Array
+		 */ 
+
+		public function fetchRow()
 		{
 		    $results = array();
 			if ($this->_results->num_rows === 0)
@@ -58,6 +112,16 @@
 			return $this->_results->fetch_assoc();;
 		}
 		
+
+
+		/**
+		 * Fetch all rows
+		 *
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return Array
+		 */ 
+
 		public function fetchAll()
 		{
 		    $results = array();
@@ -67,7 +131,17 @@
 			return $results;
 		}
 
-		public function closeConnection(): void
+
+
+		/**
+		 * Close database connection
+		 *
+		 * 
+		 * @author Cedric Maenetja <cedricm@permanentlink.co.za>
+		 * @return N/A
+		 */ 
+
+		public function closeConnection()
 		{
 			if ($this->isConnected ())
 			{
