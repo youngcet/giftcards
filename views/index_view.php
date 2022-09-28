@@ -147,13 +147,13 @@
 			if ($userrole == App\Constants::ADMIN)
 			{
 				$allstaff = $this->controller->GetAllStaff ($_SESSION['userid']);
-				$earnings = $this->controller->GetTotalEarnings ($_SESSION['userid']);
+				$totearnings = $this->controller->GetTotalEarnings ($_SESSION['userid']);
 				$totalcards = $this->controller->GetTotalGiftCards ($_SESSION['userid']);
 				
 				$data['{user.modal.title}'] = ucfirst (App\Constants::STAFF);
 				$chartdata = '';
 				
-				$totgiftcards = $totalearnings = 0;
+				$totgiftcards = $totalearnings = $totqtysold = 0;
 				foreach ($allstaff as $staff)
 				{
 					$record = $this->controller->GetAllStaffGiftCards ($staff['id']);
@@ -164,6 +164,7 @@
 
 					$totgiftcards += $qty;
 					$totalearnings += $earnings;
+					$totqtysold += $qtysold;
 
 					$data['users'][] = array
 						(
@@ -183,6 +184,7 @@
 				$data['{total.staff}'] = count ($allstaff);
 				$data['{total.earnings}'] = $totalearnings;
 				$data['{total.giftcards}'] = $totgiftcards;
+				$data['{total.giftcardssold}'] = $totqtysold;
 				$data['{dougnut.chart}'] = $chartdata;
 			}
 			
@@ -194,12 +196,19 @@
 				$earnings = $this->controller->GetTotalSellerEarnings ($_SESSION['userid']);
 				$totalcards = $this->controller->GetTotalSellerGiftCards ($_SESSION['userid']);
 
-				$totalearnings = (empty ($earnings[0]['earnings'])) ? 0 : $earnings[0]['earnings'];
-				$totgiftcards = (empty ($totalcards['qty'])) ? 0 : $totalcards['qty'];
+				$totalearnings = (empty ($earnings['earnings'])) ? 0 : $earnings['earnings'];
+				$totgiftcards = (empty ($earnings['qty'])) ? 0 : $earnings['qty'];
+				$qtysold = (empty ($earnings['qty_sold'])) ? 0 : $earnings['qty_sold'];
 
 				$data['{total.sellers}'] = count ($allsellers);
 				$data['{total.earnings}'] = $totalearnings;
 				$data['{total.giftcards}'] = $totgiftcards;
+				$data['{total.giftcardssold}'] = $qtysold;
+
+				// chart data
+				$data['{total.staff}'] = $data['{total.sellers}'];
+
+				$chartdata = '';
 
 				foreach ($allsellers as $seller)
 				{
@@ -218,7 +227,12 @@
 							'{seller.sales}'=> $earnings,
 							'{seller.staffid}'=> $_SESSION['userid'],
 						);
+					
+					$name = $seller['fname'].' '.$seller['lname'];
+					$chartdata .= "['$name', $earnings],";
 				}
+
+				$data['{dougnut.chart}'] = $chartdata;
 			}
 			
 			if ($userrole == App\Constants::SELLER)

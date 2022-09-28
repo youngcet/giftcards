@@ -192,7 +192,7 @@
 				return $sql;
 			}
 
-			$record = $this->db_handler->fetchAll();
+			$record = $this->db_handler->fetchRow();
 
 			return $record;
 		}
