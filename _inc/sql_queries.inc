@@ -13,7 +13,7 @@
     define ('INSERT_ADMIN_USER', 'INSERT INTO admin (fname, lname, email, pwd) VALUES (?,?,?,?)');
 
     define ('SELECT_ALL_STAFF', 'SELECT * from staff WHERE admin_id = ?');
-    define ('SELECT_ALL_EARNINGS', 'SELECT SUM(price) as "earnings" from giftcards WHERE admin_id = ?');
+    define ('SELECT_ALL_EARNINGS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE admin_id = ?');
     define ('SELECT_ALL_GIFTCARDS', 'SELECT COUNT(*) as "totalcards" from giftcards WHERE admin_id = ?');
 
     define ('SELECT_STAFF_BY_EMAIL_ADMIN', 'SELECT * FROM staff WHERE email = ? AND admin_id = ?');
@@ -27,7 +27,7 @@
     
 
     define ('SELECT_ALL_SELLERS', 'SELECT * from seller WHERE staff_id = ?');
-    define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT SUM(price) as "earnings" from giftcards WHERE staff_id = ?');
+    define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE staff_id = ?');
     define ('SELECT_ALL_SELLER_GIFTCARDS_TOTAL', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE seller_id = ?');
 
     define ('SELECT_ALL_MY_GIFTCARDS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE seller_id = ?');
