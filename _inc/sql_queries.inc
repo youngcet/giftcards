@@ -25,7 +25,6 @@
     define ('INSERT_GIFTCARDS_FROM_SELLER', 'INSERT INTO giftcards (seller_id, staff_id, qty) VALUES (?,?,?)');
     define ('UPDATE_GIFTCARDS_FROM_SELLER', 'UPDATE giftcards SET qty = qty + ? WHERE seller_id = ?');
     
-
     define ('SELECT_ALL_SELLERS', 'SELECT * from seller WHERE staff_id = ?');
     define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE staff_id = ?');
     define ('SELECT_ALL_SELLER_GIFTCARDS_TOTAL', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE seller_id = ?');
