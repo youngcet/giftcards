@@ -38,4 +38,7 @@
     define ('IS_GIFTCARD_SOLD', 'SELECT * FROM seller_giftcards WHERE status = "active" AND id = ?');
     define ('UPDATE_GIFTCARD_TO_SOLD', 'UPDATE giftcards SET price = price + ?, qty_sold = qty_sold + 1 WHERE seller_id = ?');
 
+    define ('SELECT_ALL_GIFTCARDS_BY_STAFFID', 'SELECT * from giftcards WHERE staff_id = ?');
+    define ('INSERT_STAFF_GIFTCARD', 'INSERT INTO giftcards (staff_id, title, description, price, qty, color, expiry_date) VALUES (?,?,?,?,?,?,?)');
+
 ?>

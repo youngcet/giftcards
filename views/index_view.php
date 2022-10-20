@@ -225,7 +225,7 @@
 							'{seller.totalcards}'=> $qty,
 							'{seller.totalcards.sold}'=> $qtysold,
 							'{seller.sales}'=> $earnings,
-							'{seller.staffid}'=> $_SESSION['userid'],
+							'{seller.staffid}'=> $_SESSION['userid']
 						);
 					
 					$name = $seller['fname'].' '.$seller['lname'];
