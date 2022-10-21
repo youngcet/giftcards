@@ -30,6 +30,10 @@
             transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             transition-property: background, transform, color, opacity;
         }
+        .giftcard_buttons > small {
+            margin-left: 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -213,7 +217,7 @@
                         endcode-->
                         
                         <li class="list-divider"></li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="?logout"
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index?logout"
                                 aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
                                     class="hide-menu">Logout</span></a></li>
                     </ul>
@@ -442,10 +446,6 @@
             <!-- ============================================================== -->
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 mt-4">
-                        <p class="text-muted mt-0 font-12">Cards include various options for customizing their
-                            backgrounds, borders, and color.<code>.card-primary info, warning, danger</code></p>
-                    </div>
                     <%=list dataset="giftcards"
                     <div class="col-md-4">
                         <div class="card text-white bg-dark" style="background-color: {card.color} !important;">
@@ -455,12 +455,26 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white">${card.price}</h3>
                                 <p class="card-text">{card.description}</p>
-                                <div>
+                                <div class="giftcard_buttons">
+                                    <small><i class="fa fa-user"></i>
+                                        {card.sellerfname} {card.sellerlname} &nbsp; 
+                                        <a id="edit{card.id}" href="javascript:assignUser('{card.id}')" style="color: white;" title="click to assign a new user"><i class="fa fa-edit"></i></a>
+                                        <a id="close{card.id}" href="javascript:hideUsers('{card.id}')" style="color: white;margin-left:8px;display: none;" title="close dropdown"><i class="fa fa-close"></i></a>
+                                        <div id="card{card.id}" style="display: none;">
+                                            <form class="mt-4" action="" method="post" id="form{card.id}">
+                                                <input name="card" value="{card.id}" type="hidden"/>
+                                                <div class="input-group">
+                                                    <select class="custom-select" id="dropdown{card.id}" name="assignuser" onchange="this.form.submit()">
+                                                        <option selected="">Choose...</option>
+                                                        <option value="0">Leave Unassigned</option>
+                                                        {allsellers}
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </small><br/>
                                     <small><i class="fa fa-clone"></i> qty. {card.qty}</small> 
                                     <small><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
-                                    <small><i class="fa fa-user"></i>
-                                        assignee
-                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -515,6 +529,22 @@
     <script src="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
     <script src="src/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
     <script src="src/dist/js/pages/dashboards/dashboard1.min.js"></script>
+
+    <script>
+        function assignUser(id){
+            $('#card'+id).css('display', 'block');
+            $('#close'+id).css('display', 'inline');
+        }
+
+        function hideUsers (id){
+            $('#card'+id).css('display', 'none');
+            $('#close'+id).css('display', 'none');
+        }
+
+        function updateUser(formid){
+            $('#'+formid).submit();
+        }
+    </script>
 </body>
 
 </html>

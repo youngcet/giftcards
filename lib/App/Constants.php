@@ -10,6 +10,7 @@
         const SELLER = 'seller';
         const SUCCESS = 'success';
         const GIFTCARD = 'Gift Card';
+        const NOT_APPLICABLE = 'N/A';
 
         const NEW_STAFF = 'New Staff';
         
@@ -17,7 +18,7 @@
         const GOOD_MORNING_MESSAGE = 'Good Morning';
         const NEW_USER_NOTIFICATION = 'New User Created!';
         const NEW_CARD_NOTIFICATION = 'New Card Created!';
-        const CARD_SOLD_NOTIFICATION = 'Gift Card Sold!';
+        const CARD_SOLD_NOTIFICATION = 'Gift Card Redeem!';
         const CARD_UPDATED_NOTIFICATION = 'Gift Cards Updated!';
         const REGISTRATION_SUCCESS_MSG = 'Registration Successful. You can sign in below!';
         const CHANGES_SAVED = 'Changes Saved!';

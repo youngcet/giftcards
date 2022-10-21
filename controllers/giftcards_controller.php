@@ -30,7 +30,7 @@
 			return $record;
 		}
 
-        public function InsertGiftCard ($staff_id, $title, $description, $price, $qty, $color, $expiry_date)
+        public function InsertGiftCard ($staff_id, $userid, $title, $description, $price, $qty, $color, $expiry_date)
 		{
 			$sql = $this->db_handler->prepareStatement (INSERT_STAFF_GIFTCARD);
 			if (App\Custom\Error::IsAnError ($sql))
@@ -38,7 +38,7 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$staff_id, $title, $description, $price, $qty, $color, $expiry_date], 'isssiss');
+			$sql = $this->db_handler->executeStatement ([$staff_id, $userid, $title, $description, $price, $qty, $color, $expiry_date], 'iisssiss');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;
@@ -62,6 +62,40 @@
 			}
 			
 			return $this->db_handler->fetchAll();
+		}
+
+		public function SelectSeller ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_SELLER);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchRow();
+		}
+
+		public function UpdateGiftCardSeller ($sellerid, $cardid)
+		{
+			$sql = $this->db_handler->prepareStatement (UPDATE_GITFTCARD_ASSIGNEE);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$sellerid, $cardid], 'ii');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
 		}
     }
 ?>

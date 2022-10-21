@@ -302,7 +302,7 @@
 			return 1;
 		}
 
-		public function SellCard ($id, $sellerid, $price)
+		public function RedeemCard ($id, $redeem)
 		{
 			$sql = $this->db_handler->prepareStatement (SELL_GIFTCARD);
 			if (App\Custom\Error::IsAnError ($sql))
@@ -310,23 +310,23 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			$sql = $this->db_handler->executeStatement ([$redeem, $id], 'ii');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;
 			}
 			
-			$sql = $this->db_handler->prepareStatement (UPDATE_GIFTCARD_TO_SOLD);
-			if (App\Custom\Error::IsAnError ($sql))
-			{
-				return $sql;
-			}
+			// $sql = $this->db_handler->prepareStatement (UPDATE_GIFTCARD_TO_SOLD);
+			// if (App\Custom\Error::IsAnError ($sql))
+			// {
+			// 	return $sql;
+			// }
 
-			$sql = $this->db_handler->executeStatement ([$price, $sellerid], 'ii');
-			if (App\Custom\Error::IsAnError ($sql))
-			{
-				return $sql;
-			}
+			// $sql = $this->db_handler->executeStatement ([$price, $sellerid], 'ii');
+			// if (App\Custom\Error::IsAnError ($sql))
+			// {
+			// 	return $sql;
+			// }
 
 			return 1;
 		}
@@ -360,6 +360,23 @@
 			}
 
 			return 1;
+		}
+
+		public function SellerGiftCards ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_GIFTCARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchAll();
 		}
 	}
 ?>

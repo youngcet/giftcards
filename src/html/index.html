@@ -98,10 +98,15 @@
                     <!-- ============================================================== -->
                     <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
                         <!-- Notification -->
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-success text-white rounded-circle btn-circle font-20" data-toggle="modal" data-target="#{modal.details}">+</button>
-                            <span class="ml-2 d-none d-lg-inline-block"><span class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">Add {user.modal.title}</span></span>
-                        </li>
+                        <!--php-code
+                            if ('{user.role}' !== 'seller')
+                            {
+                                return '<li class="nav-item dropdown">
+                                    <button class="btn btn-success text-white rounded-circle btn-circle font-20" data-toggle="modal" data-target="#{modal.details}">+</button>
+                                    <span class="ml-2 d-none d-lg-inline-block"><span class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">Add {user.modal.title}</span></span>
+                                </li>';
+                            }
+                        endcode-->
                     </ul>
                     <!-- ============================================================== -->
                     <!-- Right side toggle and nav items -->
@@ -206,7 +211,7 @@
                                 <li class="list-divider"></li>
                                 <li class="nav-small-cap"><span class="hide-menu">Gift Cards</span></li>
 
-                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                <li class="sidebar-item"> <a class="sidebar-link" href="#zero_config"
                                         aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
                                             class="hide-menu">Gift Card List 
                                         </span></a>
@@ -732,17 +737,11 @@
                                                                 <form id="updateform"><input type="hidden" name="id"><input type="hidden" name="tbl"><input disabled type="submit" style="border:none;width:30%;float:left;margin-top:10px" title="Update Seller" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="update"></form>
                                                                 <input disabled type="submit" style="border:none;width:30%;float:left;margin-top:10px" title="Delete Seller" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block" value="delete"></form>
                                                             </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14"><form method="post"><div class="input-group mb-3">
-                                                                <div class="input-group-prepend">
-                                                                    <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                                                </div>
-                                                                <select class="custom-select" id="inputGroupSelect01">
-                                                                    <option selected="">Choose...</option>
-                                                                    <option value="1">One</option>
-                                                                    <option value="2">Two</option>
-                                                                    <option value="3">Three</option>
-                                                                </select>
-                                                            </div><input type="hidden" name="seller_id" value="{seller.id}"><input type="hidden" name="staff_id" value="{seller.staffid}"><input type="submit" name="updategiftcards" style="border:none;width:30%;float:left;margin-top:10px" title="Add GiftCards" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="add >"></form></td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">
+                                                                Amt: {seller.totalcards}<br/>
+                                                                <button type="button" class="btn btn-secondary btn-outline" data-toggle="tooltip" data-placement="top" title="" data-original-title="{tooltip.text}">GiftCards ({seller.totalgiftcards})</button>
+
+                                                            </td>
                                                             <td class="border-top-0 text-muted px-2 py-4 font-14">{seller.totalcards.sold}</td>
                                                             <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${seller.sales}
                                                             </td>
@@ -764,13 +763,15 @@
                                             
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table no-wrap v-middle mb-0">
+                                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
                                                 <thead>
                                                     <tr class="border-0">
                                                         <th class="border-0 font-14 font-weight-medium text-muted"></th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Description</th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Status</th>
-                                                         <th class="border-0 font-14 font-weight-medium text-muted">Created</th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Quantity</th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Sold</th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Redeem</th>
+                                                         <th class="border-0 font-14 font-weight-medium text-muted">Expiring On</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -781,8 +782,10 @@
                                                                 <span class="text-muted font-14">${card.price}</span><br/>
                                                             </td>
                                                             <td class="border-top-0 text-muted px-2 py-4 font-14">{card.description}</td>
-                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4"><span style="float:left;" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">{card.status}</span> <!--php-code if ('{card.status}' === 'active') return '<form method="post"><input type="hidden" name="id" value="{card.id}"><input type="hidden" name="seller_id" value="{card.sellerid}"><input type="hidden" name="price" value="{card.price}"><input type="submit" name="sellCard" style="border:none;width:40%;float:left;" title="Update" class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none" value="mark as sold"></form>';endcode--></td>
-                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{card.created}</td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{card.qty}</td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{card.qtysold}</td>
+                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4"><form action="" method="post"><!--php-code if ('{iscardactive}') return '<input type="hidden" name="card"><input type="number" class="form-control" name="redeem"><input name="redeemcard" type="submit" value="Redeem" style="background:transparent;color:blue;border:none">';endcode--></form></td>
+                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{card.expirydate}</td>
                                                         </tr>
                                                     =%>
                                                 </tbody>

@@ -95,12 +95,12 @@
 				}
 			}
 
-			if (isset ($_POST['sellCard']))
+			if (isset ($_POST['redeemcard']))
 			{
-				$id = strip_tags (trim ($_POST['id']));
-				$price = strip_tags (trim ($_POST['price']));
+				$id = strip_tags (trim ($_POST['card']));
+				$redeem = strip_tags (trim ($_POST['redeem']));
 
-				$res = $this->controller->SellCard ($id, $_SESSION['userid'], $price);
+				$res = $this->controller->RedeemCard ($id, $redeem);
 				if (App\Custom\Error::IsAnError ($res))
 				{
 					$data[App\Constants::ERROR_NOTIFICATION_HTML] = $res->GetError();
@@ -213,6 +213,23 @@
 				foreach ($allsellers as $seller)
 				{
 					$sellergiftcards = $this->controller->GetAllSellerGiftCards ($seller['id']);
+					
+					$sellercards = $this->controller->SellerGiftCards ($seller['id']);
+					if (App\Custom\Error::IsAnError ($sellercards))
+					{
+						$data[App\Constants::ERROR_NOTIFICATION_HTML] = $sellercards->GetError();
+					}
+					
+					$tooltiptext = array();
+					$avaiabletotalgiftcards = 0;
+					$totalsellerearnings = 0;
+					foreach ($sellercards as $card)
+					{
+						$tooltiptext[] = $card['title'].' ('.$card['qty'].')';
+						$avaiabletotalgiftcards += $card['qty'];
+						$totalsellerearnings += ($card['price']*$card['qty_sold']);
+					}
+					
 					$qty = (isset ($sellergiftcards['qty'])) ? $sellergiftcards['qty'] : 0;
 					$qtysold = (isset ($sellergiftcards['qty_sold'])) ? $sellergiftcards['qty_sold'] : 0;
 					$earnings = (isset ($sellergiftcards['earnings'])) ? $sellergiftcards['earnings'] : 0;
@@ -222,14 +239,16 @@
 							'{seller.name}' => $seller['fname'] . ' '.$seller['lname'],
 							'{seller.email}' => $seller['email'],
 							'{seller.id}' => $seller['id'],
-							'{seller.totalcards}'=> $qty,
+							'{seller.totalcards}'=> $avaiabletotalgiftcards,
 							'{seller.totalcards.sold}'=> $qtysold,
-							'{seller.sales}'=> $earnings,
-							'{seller.staffid}'=> $_SESSION['userid']
+							'{seller.sales}'=> $totalsellerearnings,
+							'{seller.staffid}'=> $_SESSION['userid'],
+							'{tooltip.text}' => implode (', ', $tooltiptext),
+							'{seller.totalgiftcards}' => count ($tooltiptext)
 						);
 					
 					$name = $seller['fname'].' '.$seller['lname'];
-					$chartdata .= "['$name', $earnings],";
+					$chartdata .= "['$name', $totalsellerearnings],";
 				}
 
 				$data['{dougnut.chart}'] = $chartdata;
@@ -250,18 +269,24 @@
 				$data['{sold.giftcards}'] = $giftcardsold;
 				$data['{total.earnings}'] = $earnings;
 				$data['{modal.details}'] = 'newcard-modal';
-
+				$data['{card.form}'] = 'form';
 				foreach ($createdgiftcards as $card)
 				{
+					if ($card['expiry_date'] == '') $card['expiry_date'] = App\Constants::NOT_APPLICABLE;
+					$card['{iscardactive}'] = ($card['qty'] != $card['qty_sold']) ? true : false;
+
 					$data['cards'][] = array
 						(
 							'{card.title}' => $card['title'],
 							'{card.description}' => $card['description'],
 							'{card.price}' => $card['price'],
 							'{card.status}' => $card['status'],
-							'{card.created}'=> $card['created'],
+							'{card.expirydate}'=> $card['expiry_date'],
 							'{card.id}'=> $card['id'],
 							'{card.sellerid}'=> $card['seller_id'],
+							'{card.qty}' => $card['qty'],
+							'{card.qtysold}' => $card['qty_sold'],
+							'{iscardactive}' => $card['{iscardactive}'],
 						);
 				}
 			}
@@ -277,7 +302,7 @@
 				die ($htmlstring->GetError()); // gets error message
 				// $htmlstring->GetCode(); // gets error code
 			}
-
+			
 			echo $htmlstring;
 		}
 

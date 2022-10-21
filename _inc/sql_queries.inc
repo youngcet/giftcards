@@ -26,19 +26,21 @@
     define ('UPDATE_GIFTCARDS_FROM_SELLER', 'UPDATE giftcards SET qty = qty + ? WHERE seller_id = ?');
     
     define ('SELECT_ALL_SELLERS', 'SELECT * from seller WHERE staff_id = ?');
-    define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE staff_id = ?');
+    define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT SUM(qty) as qty, SUM(qty_sold) as qty_sold, SUM(price*qty_sold) as "earnings" from giftcards WHERE staff_id = ?');
     define ('SELECT_ALL_SELLER_GIFTCARDS_TOTAL', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE seller_id = ?');
 
-    define ('SELECT_ALL_MY_GIFTCARDS', 'SELECT qty, qty_sold, price as "earnings" from giftcards WHERE seller_id = ?');
+    define ('SELECT_ALL_MY_GIFTCARDS', 'SELECT SUM(qty) as qty, SUM(qty_sold) as qty_sold, SUM(price*qty_sold) as "earnings" from giftcards WHERE seller_id = ?');
     define ('UPDATE_GIFTCARDS_QTY', 'UPDATE giftcards SET qty = qty - 1 WHERE seller_id = ?');
-    define ('SELECT_ALL_MY_CREATED_GIFTCARDS', 'SELECT * from seller_giftcards WHERE seller_id = ?');
+    define ('SELECT_ALL_MY_CREATED_GIFTCARDS', 'SELECT * from giftcards WHERE seller_id = ?');
     define ('INSERT_GIFTCARD', 'INSERT INTO seller_giftcards (seller_id, title, description, price, status) VALUES (?,?,?,?,?)');
 
-    define ('SELL_GIFTCARD', 'UPDATE seller_giftcards SET status = "sold" WHERE id = ?');
+    define ('SELL_GIFTCARD', 'UPDATE giftcards SET qty_sold = ? WHERE id = ?');
     define ('IS_GIFTCARD_SOLD', 'SELECT * FROM seller_giftcards WHERE status = "active" AND id = ?');
     define ('UPDATE_GIFTCARD_TO_SOLD', 'UPDATE giftcards SET price = price + ?, qty_sold = qty_sold + 1 WHERE seller_id = ?');
 
     define ('SELECT_ALL_GIFTCARDS_BY_STAFFID', 'SELECT * from giftcards WHERE staff_id = ?');
-    define ('INSERT_STAFF_GIFTCARD', 'INSERT INTO giftcards (staff_id, title, description, price, qty, color, expiry_date) VALUES (?,?,?,?,?,?,?)');
+    define ('INSERT_STAFF_GIFTCARD', 'INSERT INTO giftcards (staff_id, seller_id, title, description, price, qty, color, expiry_date) VALUES (?,?,?,?,?,?,?,?)');
+    define ('SELECT_SELLER', 'SELECT * FROM seller WHERE id = ?');
+    define ('UPDATE_GITFTCARD_ASSIGNEE', 'UPDATE giftcards SET seller_id = ? WHERE id = ?');
 
 ?>
