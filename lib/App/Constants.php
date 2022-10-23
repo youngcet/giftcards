@@ -11,6 +11,8 @@
         const SUCCESS = 'success';
         const GIFTCARD = 'Gift Card';
         const NOT_APPLICABLE = 'N/A';
+        const USER_DELETED_MSG = 'User Deleted Successful!';
+        const CARD_DELETED_MSG = 'Card Deleted Successful!';
 
         const NEW_STAFF = 'New Staff';
         

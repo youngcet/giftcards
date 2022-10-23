@@ -24,6 +24,7 @@
 			$data['users'] = array();
 			$data['sellers'] = array();
 			$data['cards'] = array();
+			$data['notifications'] = array();
 
 			$userrole = $_SESSION['role'];
 
@@ -33,6 +34,10 @@
 			$data['{user.dashboard.role}'] = $userrole;
 			$data['{user.list.role}'] = $userrole;
 			$data['{modal.details}'] = 'newuser-modal';
+			$data['{deleteuser}'] = false;
+			$data['{user.delete}'] = $data['{delete.userid}'] = $data['{delete.role}'] = '';
+			$showdeletepopup = true;
+			$data['{notification.count}'] = 0;
 			
 			$data['{greeting.message}']  = (App\Custom\Utils::GetCurrentHour() > 12) ? App\Constants::GOOD_AFTERNOON_MESSAGE : App\Constants::GOOD_MORNING_MESSAGE;
 
@@ -41,6 +46,47 @@
 				session_destroy();
 				header ('Location: login');
 				die();
+			}
+
+			if (isset ($_POST['deleteuser']))
+			{
+				$useridtodelete = trim (strip_tags ($_POST['id']));
+				$userrole = trim (strip_tags ($_POST['role']));
+
+				if (! empty ($useridtodelete))
+				{
+					if ($userrole == App\Constants::STAFF) $type = App\Constants::STAFF;
+					if ($userrole == App\Constants::SELLER) $type = App\Constants::SELLER;
+
+					$deleteuser = $this->controller->DeleteUser ($type, base64_decode ($useridtodelete));
+					if (App\Custom\Error::IsAnError ($deleteuser))
+					{
+						$data[App\Constants::ERROR_NOTIFICATION_HTML] = $deleteuser->GetError();
+					}
+					else
+					{
+						$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::USER_DELETED_MSG;
+						$showdeletepopup = false;
+
+						header ('Location: index');
+						die;
+					}
+				}
+			}
+
+			if (isset ($_GET['del']) && isset ($_GET['u']) && isset ($_GET['role']) && $showdeletepopup)
+			{
+				$deleteuserid = trim (strip_tags ($_GET['del']));
+				$user = trim (strip_tags ($_GET['u']));
+				$role = trim (strip_tags ($_GET['role']));
+
+				if (! empty ($deleteuserid))
+				{
+					$data['{user.delete}'] = $user;
+					$data['{deleteuser}'] = true;
+					$data['{delete.userid}'] = $deleteuserid;
+					$data['{delete.role}'] = $role;
+				} 
 			}
 
 			if (isset ($_POST['addUser']))
@@ -171,6 +217,7 @@
 							'{staff.name}' => $staff['fname'] . ' '.$staff['lname'],
 							'{staff.email}' => $staff['email'],
 							'{staff.id}' => $staff['id'],
+							'{staff.id.encoded}' => base64_encode ($staff['id']),
 							'{staff.totalcards}'=> $qty,
 							'{staff.totalsellers}' => count ($this->controller->GetAllSellers ($staff['id'])),
 							'{staff.totalcards.sold}'=> $qtysold,
@@ -240,6 +287,7 @@
 							'{seller.email}' => $seller['email'],
 							'{seller.id}' => $seller['id'],
 							'{seller.totalcards}'=> $avaiabletotalgiftcards,
+							'{seller.id.encoded}' => base64_encode ($seller['id']),
 							'{seller.totalcards.sold}'=> $qtysold,
 							'{seller.sales}'=> $totalsellerearnings,
 							'{seller.staffid}'=> $_SESSION['userid'],
@@ -257,6 +305,19 @@
 			if ($userrole == App\Constants::SELLER)
 			{
 				$data['{user.modal.title}'] = ucfirst (App\Constants::GIFTCARD);
+
+				$notifications = $this->controller->SelectNotifications ($_SESSION['userid']);
+				foreach ($notifications as $notification)
+				{
+					$data['notifications'][] = array
+						(
+							'{notification.title}' => $notification['title'],
+							'{notification.text}' => $notification['text'],
+							'{notification.time}' => $notification['created'],
+						);
+				}
+
+				$data['{notification.count}'] = count ($notifications);
 
 				$giftcards = $this->controller->GetGiftCards ($_SESSION['userid']);
 				$createdgiftcards = $this->controller->GetCreatedGiftCards ($_SESSION['userid']);
@@ -287,6 +348,7 @@
 							'{card.qty}' => $card['qty'],
 							'{card.qtysold}' => $card['qty_sold'],
 							'{iscardactive}' => $card['{iscardactive}'],
+							'{card.number}' => $card['card_number']
 						);
 				}
 			}

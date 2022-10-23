@@ -378,5 +378,42 @@
 			
 			return $this->db_handler->fetchAll();
 		}
+
+		public function SelectNotifications ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_NOTIFICATIONS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchAll();
+		}
+
+		public function DeleteUser ($type, $id)
+		{
+			if ($type == App\Constants::STAFF) $query = DELETE_STAFF;
+			if ($type == App\Constants::SELLER) $query = DELETE_SELLER;
+
+			$sql = $this->db_handler->prepareStatement ($query);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
 	}
 ?>

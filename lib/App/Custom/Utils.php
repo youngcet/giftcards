@@ -37,6 +37,17 @@
             //date_default_timezone_set ('America/Los_Angeles'); // using server time
             return date ('H', time());
         }
+
+        public static function generateCode ($limit)
+        {
+            $code = '';
+            for($i = 0; $i < $limit; $i++) 
+            { 
+                $code .= ($i % 4 == 0) ? '-'.mt_rand(0, 9) : mt_rand(0, 9);
+            }
+            
+            return ltrim($code, $code[0]);
+        }
     }
 
 ?>

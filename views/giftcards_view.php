@@ -23,8 +23,24 @@
 			$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = '';
 			$data['{user.role}'] = $_SESSION['role'];
             $data['{modal.details}'] = 'newcard-modal';
-            $data['{user.modal.title}'] = 'GiftCard';
+            $data['{user.modal.title}'] = 'Gift Card';
             $data['giftcards'] = $data['sellers'] = array();
+            $data['{total.giftcards}'] = false;
+
+            if (isset ($_POST['deletecard']))
+            {
+                $cardid = trim (strip_tags($_POST['cardid']));
+
+                $deletecard = $this->controller->DeleteGiftCard ($cardid);
+                if (App\Custom\Error::IsAnError ($deletecard))
+                {
+                    $data[App\Constants::ERROR_NOTIFICATION_HTML] = $deletecard->GetError();
+                }
+                else
+                {
+                    $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CARD_DELETED_MSG;
+                }
+            }
 
             if (isset ($_POST['createCard']))
             {
@@ -39,10 +55,11 @@
                 $insertgiftcard = $this->controller->InsertGiftCard ($_SESSION['userid'], $assignee, $title, $desc, $price, $qty, $color, $date);
                 if (App\Custom\Error::IsAnError ($insertgiftcard))
                 {
-                    $data[App\Constants::ERROR_NOTIFICATION_HTML] = $res->GetError();
+                    $data[App\Constants::ERROR_NOTIFICATION_HTML] = $insertgiftcard->GetError();
                 }
                 else
                 {
+                    $this->controller->InsertNotification ($assignee, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card");
                     $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::NEW_CARD_NOTIFICATION;
                 }
             }
@@ -51,6 +68,7 @@
             {
                 $cardid = trim (strip_tags($_POST['card']));
                 $sellerid = trim (strip_tags ($_POST['assignuser']));
+                $title = trim (strip_tags ($_POST['title']));
 
                 $updatecarduser = $this->controller->UpdateGiftCardSeller ($sellerid, $cardid);
                 if (App\Custom\Error::IsAnError ($updatecarduser))
@@ -59,6 +77,11 @@
                 }
                 else
                 {
+                    if ($sellerid != 0)
+                    {
+                        $this->controller->InsertNotification ($sellerid, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card");
+                    }
+                
                     $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
                 }
             }
@@ -68,17 +91,17 @@
             {
                 $data[App\Constants::ERROR_NOTIFICATION_HTML] = $sellers->GetError();
             }
-
+            
             $allsellers = '';
             foreach ($sellers as $seller)
             {
                 $allsellers .= '<option value="'.$seller['id'].'">'.$seller['fname'].' '. $seller['lname'].' ('. $seller['email'].')</option>';
-                // $data['allsellers'][] = array (
-                //         '{seller.id}' => $seller['id'],
-                //         '{seller.name}' => $seller['fname'],
-                //         '{seller.lname}' => $seller['lname'],
-                //         '{seller.email}' => $seller['email'],
-                //     );
+                $data['allsellers'][] = array (
+                        '{seller.id}' => $seller['id'],
+                        '{seller.name}' => $seller['fname'],
+                        '{seller.lname}' => $seller['lname'],
+                        '{seller.email}' => $seller['email'],
+                    );
             }
 
             $data['{allsellers}'] = $allsellers;
@@ -87,6 +110,8 @@
             {
                 $data[App\Constants::ERROR_NOTIFICATION_HTML] = $giftcards->GetError();
             }
+
+            if (empty ($giftcards)) $data['{total.giftcards}'] = true;
 
             foreach ($giftcards as $giftcard)
             {
@@ -125,6 +150,7 @@
                         '{card.qty}' => $giftcard['qty'],
                         '{card.sellerfname}' => $giftcard['sellerfname'],
                         '{card.sellerlname}' => $giftcard['sellerlname'],
+                        '{card.voucherno}' => $giftcard['card_number']
                     );
             }
            

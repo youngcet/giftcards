@@ -31,7 +31,7 @@
             transition-property: background, transform, color, opacity;
         }
         .giftcard_buttons > small {
-            margin-left: 10px;
+            margin-left: 0px;
             font-size: 12px;
         }
     </style>
@@ -194,7 +194,7 @@
                                 </li>
                                 <li class="sidebar-item"> <a class="sidebar-link" href="giftcards"
                                         aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                            class="hide-menu">GiftCards 
+                                            class="hide-menu">Gift Cards 
                                         </span></a>';
                             }
                         endcode-->
@@ -385,7 +385,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="grid-container">
-                                            <small>This user will have access to this giftcard.</small>
+                                            <small>This user will have access to this gift card.</small>
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
@@ -396,7 +396,7 @@
                                                 </div>
                                                 <select class="custom-select" id="inputGroupSelect01" name="assignee">
                                                     <option selected="">Choose ...</option>
-                                                    <%=list dataset="sellers"
+                                                    <%=list dataset="allsellers"
                                                     <option value="{seller.id}">{seller.name} {seller.lname} ({seller.email})</option>
                                                     =%>
                                                 </select>
@@ -405,7 +405,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group text-center">
-                                    <button class="btn btn-primary" type="submit" name="createCard">Create GiftCard</button>
+                                    <button class="btn btn-primary" type="submit" name="createCard">Create Gift Card</button>
                                 </div>
                             </form>
                         </div>
@@ -418,13 +418,13 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-7 align-self-center">
-                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">My GiftCards</h3>
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">My Gift Cards</h3>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
                                     <li class="breadcrumb-item"><a href="index">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item text-muted active" aria-current="page">Giftcards</li>
+                                    <li class="breadcrumb-item text-muted active" aria-current="page">Gift Cards</li>
                                 </ol>
                             </nav>
                         </div>
@@ -446,6 +446,22 @@
             <!-- ============================================================== -->
             <div class="container-fluid">
                 <div class="row">
+                    <!--php-code
+                        if ('{total.giftcards}')
+                        {
+                            return '<div class="col-lg-12">
+                                <div class="grid-container">
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        No Gift Cards created yet!
+                                    </div>
+                                </div>
+                            </div>';
+                        }
+                    endcode-->
+                    
                     <%=list dataset="giftcards"
                     <div class="col-md-4">
                         <div class="card text-white bg-dark" style="background-color: {card.color} !important;">
@@ -463,6 +479,7 @@
                                         <div id="card{card.id}" style="display: none;">
                                             <form class="mt-4" action="" method="post" id="form{card.id}">
                                                 <input name="card" value="{card.id}" type="hidden"/>
+                                                <input name="title" value="{card.title}" type="hidden"/>
                                                 <div class="input-group">
                                                     <select class="custom-select" id="dropdown{card.id}" name="assignuser" onchange="this.form.submit()">
                                                         <option selected="">Choose...</option>
@@ -473,8 +490,15 @@
                                             </form>
                                         </div>
                                     </small><br/>
+                                    <small><i class="fa fa-hashtag"></i> Card No. {card.voucherno}</small> <br/>
                                     <small><i class="fa fa-clone"></i> qty. {card.qty}</small> 
-                                    <small><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
+                                    <small style="margin-left: 10px;"><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
+                                    <small style="margin-left: 10px;"><i class="fa fa-trash"></i> 
+                                    <form style="display: inline;margin-left:-6px" method="post" action="">
+                                        <input type="hidden" value="{card.id}" name="cardid">
+                                        <input type="submit" style="background:transparent;border:none;color: white;" name="deletecard" value="delete">
+                                    </form>
+                                    </small>
                                 </div>
                             </div>
                         </div>
