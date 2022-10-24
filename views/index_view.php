@@ -1,6 +1,9 @@
 <?php
 
 	require ('session.php');
+// 	ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 	class IndexView
 	{
@@ -35,17 +38,26 @@
 			$data['{user.list.role}'] = $userrole;
 			$data['{modal.details}'] = 'newuser-modal';
 			$data['{deleteuser}'] = false;
-			$data['{user.delete}'] = $data['{delete.userid}'] = $data['{delete.role}'] = '';
+			$data['{user.delete}'] = $data['{delete.userid}'] = $data['{delete.role}'] = $data['{admin.users}'] = $data['{staff.users}'] = '';
 			$showdeletepopup = true;
 			$data['{notification.count}'] = 0;
+			$data['{hide.makeallasread}'] = 'none';
 			
 			$data['{greeting.message}']  = (App\Custom\Utils::GetCurrentHour() > 12) ? App\Constants::GOOD_AFTERNOON_MESSAGE : App\Constants::GOOD_MORNING_MESSAGE;
+
+			$userinfo = $this->controller->SelectUserInfo ($userrole, $_SESSION['userid']);
+			$_SESSION['profile_img'] = ($userinfo['profile_img'] == '') ? App\Constants::DEFAULT_USER_PROFILE_IMG: $userinfo['profile_img'];
 
 			if (isset ($_GET['logout']))
 			{
 				session_destroy();
 				header ('Location: login');
 				die();
+			}
+
+			if (isset ($_POST['seen']))
+			{
+				$this->controller->DeleteNotification ($_SESSION['userid']);
 			}
 
 			if (isset ($_POST['deleteuser']))
@@ -178,15 +190,38 @@
 			{
 				$pwd = strip_tags (trim ($_POST['pwd']));
 				
-				$res = $this->controller->UpdateUserPassword ($userrole, $pwd, $_SESSION['userid']);
-				if (App\Custom\Error::IsAnError ($res))
+				if (! empty ($pwd))
 				{
-					$data[App\Constants::ERROR_NOTIFICATION_HTML] = $res->GetError();
+					$res = $this->controller->UpdateUserPassword ($userrole, $pwd, $_SESSION['userid']);
+					if (App\Custom\Error::IsAnError ($res))
+					{
+						$data[App\Constants::ERROR_NOTIFICATION_HTML] = $res->GetError();
+					}
+					else
+					{
+						$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
+					}
 				}
-				else
+
+				if (! empty ($_FILES['img']))
 				{
-					$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
+					$filename = preg_replace ('/\s+/', '', $_FILES['img']['name']);
+                    $tmpname = preg_replace ('/\s+/', '', $_FILES['img']['tmp_name']);
+
+					$filename = App\Constants::USER_IMG_DIR.$_SESSION['userid'].'_'.$userrole.'_'.$filename;
+					App\Custom\Utils::compress_image ($tmpname, $filename, 80);
+
+					$updateimg = $this->controller->UpdateUserProfileImg ($userrole, $filename, $_SESSION['userid']);
+					if (App\Custom\Error::IsAnError ($updateimg))
+					{
+						$data[App\Constants::ERROR_NOTIFICATION_HTML] = $updateimg->GetError();
+					}
+					else
+					{
+						$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
+					}
 				}
+				
 			}
 
 			// check user role and build the data structure
@@ -204,13 +239,17 @@
 				{
 					$record = $this->controller->GetAllStaffGiftCards ($staff['id']);
 					
-					$qty = (empty ($record)) ? 0 : $record['qty'];
-					$qtysold = (empty ($record)) ? 0 : $record['qty_sold'];
-					$earnings = (empty ($record)) ? 0 : $record['earnings'];
+					if (empty ($record)) continue;
 
+					$qty = ($record['qty'] == '') ? 0 : $record['qty'];
+					$qtysold = ($record['qty_sold'] == '') ? 0 : $record['qty_sold'];
+					$earnings = ($record['earnings'] == '') ? 0 : $record['earnings'];
+					
 					$totgiftcards += $qty;
 					$totalearnings += $earnings;
 					$totqtysold += $qtysold;
+
+					if ($staff['profile_img'] == '') $staff['profile_img'] = App\Constants::DEFAULT_USER_PROFILE_IMG;
 
 					$data['users'][] = array
 						(
@@ -222,6 +261,7 @@
 							'{staff.totalsellers}' => count ($this->controller->GetAllSellers ($staff['id'])),
 							'{staff.totalcards.sold}'=> $qtysold,
 							'{staff.sales}'=> $earnings,
+							'{staff.profileimg}'=> $staff['profile_img'],
 						);
 					
 					$name = $staff['fname'].' '.$staff['lname'];
@@ -281,6 +321,8 @@
 					$qtysold = (isset ($sellergiftcards['qty_sold'])) ? $sellergiftcards['qty_sold'] : 0;
 					$earnings = (isset ($sellergiftcards['earnings'])) ? $sellergiftcards['earnings'] : 0;
 
+					if ($seller['profile_img'] == '') $seller['profile_img'] = App\Constants::DEFAULT_USER_PROFILE_IMG;
+					
 					$data['sellers'][] = array
 						(
 							'{seller.name}' => $seller['fname'] . ' '.$seller['lname'],
@@ -292,7 +334,8 @@
 							'{seller.sales}'=> $totalsellerearnings,
 							'{seller.staffid}'=> $_SESSION['userid'],
 							'{tooltip.text}' => implode (', ', $tooltiptext),
-							'{seller.totalgiftcards}' => count ($tooltiptext)
+							'{seller.totalgiftcards}' => count ($tooltiptext),
+							'{seller.profileimg}' => $seller['profile_img']
 						);
 					
 					$name = $seller['fname'].' '.$seller['lname'];
@@ -309,15 +352,22 @@
 				$notifications = $this->controller->SelectNotifications ($_SESSION['userid']);
 				foreach ($notifications as $notification)
 				{
+					// $datetime = explode (' ', $notification['created']);
+					// $createdtime = explode (' ', $datetime[1]);
+					// $time = $createdtime[0].':'.$createdtime[1];
+
 					$data['notifications'][] = array
 						(
+							'{notification.profileimg}' => $notification['profile_img'],
 							'{notification.title}' => $notification['title'],
+							'{notification.id}' => $notification['id'],
 							'{notification.text}' => $notification['text'],
 							'{notification.time}' => $notification['created'],
 						);
 				}
 
 				$data['{notification.count}'] = count ($notifications);
+				if ($data['{notification.count}']) $data['{hide.makeallasread}'] = 'block';
 
 				$giftcards = $this->controller->GetGiftCards ($_SESSION['userid']);
 				$createdgiftcards = $this->controller->GetCreatedGiftCards ($_SESSION['userid']);
@@ -331,6 +381,7 @@
 				$data['{total.earnings}'] = $earnings;
 				$data['{modal.details}'] = 'newcard-modal';
 				$data['{card.form}'] = 'form';
+				
 				foreach ($createdgiftcards as $card)
 				{
 					if ($card['expiry_date'] == '') $card['expiry_date'] = App\Constants::NOT_APPLICABLE;
@@ -353,10 +404,14 @@
 				}
 			}
 			
-			// parse the html string and the data structure and display the results
+			$data['{profile_img}'] = $_SESSION['profile_img'];
+			
+			
+			$data['{admin.users}'] = $this->model->getSubstString ($userrole, $data);
+			$data['{staff.users}'] = $this->model->getSubstString ($userrole, $data);
+
 			$htmlparser = new App\Custom\HTMLParser (file_get_contents (App\Constants::HTML_PAGES_DIR.'index.html'), $data);
 			$htmlstring = $htmlparser->GetSubstitutedString(); // get the parsed html string
-
 			// check for errors
 			if (App\Custom\Error::IsAnError ($htmlstring))
 			{
@@ -364,7 +419,7 @@
 				die ($htmlstring->GetError()); // gets error message
 				// $htmlstring->GetCode(); // gets error code
 			}
-			
+
 			echo $htmlstring;
 		}
 

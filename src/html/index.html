@@ -103,38 +103,41 @@
                             if ('{user.role}' === 'seller')
                             {
                                 return '<li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)" id="bell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell svg-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
-                                <span class="badge badge-primary notify-no rounded-circle">{notification.count}</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
-                                <ul class="list-style-none">
-                                    <%=list dataset="notifications"
-                                    <li>
-                                        <div class="message-center notifications position-relative ps-container ps-theme-default" data-ps-id="e2c71344-31b5-84c6-a0eb-7799fb9d0997">
-                                           
-                                            <a href="javascript:void(0)" class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                                <div class=""><img src="src/assets/images/users/user.png" alt="user" class="rounded-circle" width="40"></div>
-                                                <div class="w-75 d-inline-block v-middle pl-2">
-                                                    <h6 class="message-title mb-0 mt-1">{notification.title}</h6>
-                                                    <span class="font-12 text-nowrap d-block text-muted">{notification.text}!</span>
-                                                    <span class="font-12 text-nowrap d-block text-muted">{notification.time}</span>
-                                                </div>
-                                            </a>
-                                        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
-                                    </li>
-                                    =%>
-                                    <li>
-                                        <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
-                                            <strong>Mark All As Read</strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>';
+                                <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)" id="bell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell svg-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                                    <span class="badge badge-primary notify-no rounded-circle">{notification.count}</span>
+                                </a>';
                             }
                         endcode-->
+
+                        <!--php-code
+                        if ('{notification.count}' > 0)
+                        {
+                            return '<div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
+                                <ul class="list-style-none">
+                                <%=list dataset="notifications"
+                                <li>
+                                    <div class="message-center notifications position-relative ps-container ps-theme-default" data-ps-id="e2c71344-31b5-84c6-a0eb-7799fb9d0997">
+                                    
+                                        <a href="javascript:void(0)" class="message-item d-flex align-items-center border-bottom px-3 py-2">
+                                            <div class=""><img src="{notification.profileimg}" alt="user" class="rounded-circle" width="40"></div>
+                                            <div class="w-75 d-inline-block v-middle pl-2">
+                                                <h6 class="message-title mb-0 mt-1">{notification.title}</h6>
+                                                <span class="font-12 text-nowrap d-block text-muted">{notification.text}!</span>
+                                                <span class="font-12 text-nowrap d-block text-muted">{notification.time}</span>
+                                            </div>
+                                        </a>
+                                    <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                                </li>
+                                =%>
+                                <li>
+                                    <form action="" method="post"><input type="hidden" value="{notification.id}" name="id"><input style="border:none;background:transparent;padding:10px;font-size:12px" type="submit" name="seen" value="Mark All As Read >"></form>
+                                </li>
+                            </ul>
+                            </div>';
+                        }
+                     endcode-->
+                        </li>
 
                         <!--php-code
                             if ('{user.role}' !== 'seller')
@@ -170,7 +173,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                <img src="src/assets/images/users/user.png" alt="user" class="rounded-circle"
+                                <img src="{profile_img}" alt="user" class="rounded-img"
                                     width="40">
                                 <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
                                         class="text-dark">{user.fname} {user.lname}</span> <i data-feather="chevron-down"
@@ -221,22 +224,27 @@
                         <!--php-code 
                             if ('{user.role}' === 'staff') 
                             {
-                                return '<li class="sidebar-item selected"> <a class="sidebar-link selected" href="#"
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
                                 aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
                                     class="hide-menu">Dashboard</span></a></li>
                                 <li class="list-divider"></li>
                                 <li class="nav-small-cap"><span class="hide-menu">Lists</span></li>
 
-                                <li class="sidebar-item"> <a class="sidebar-link" href="#zero_config"
+                                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index#zero_config"
                                         aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
                                             class="hide-menu">Sellers 
                                         </span></a>
                                 </li>
-                                <li class="sidebar-item"> <a class="sidebar-link" href="giftcards"
-                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                            class="hide-menu">Gift Cards 
-                                        </span></a>
-                                </li>';
+                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Gift Cards </span></a>
+                                <ul aria-expanded="false" class="collapse first-level base-level-line">
+                                    <li class="sidebar-item"><a href="giftcards" class="sidebar-link"><span class="hide-menu"> Active
+                                            </span></a>
+                                    </li>
+                                    <li class="sidebar-item"><a href="giftcards?redeemed" class="sidebar-link"><span class="hide-menu"> Redeemed
+                                            </span></a>
+                                    </li>
+                                </ul>
+                            </li>';
                             }
                         endcode-->
 
@@ -340,7 +348,13 @@
                                 <h2>My Details</h2>
                             </div>
 
-                            <form class="pl-3 pr-3" action="#" method="post">
+                            <form class="pl-3 pr-3" action="#" method="post" enctype="multipart/form-data">
+
+                                <fieldset class="form-group">
+                                    <label for="username">Profile Image</label>
+                                    <input type="file" class="form-control-file" id="exampleInputFile" name="img" accept="image/*">
+                                </fieldset>
+                                <br/>
                                 <div class="form-group">
                                     <label for="username">Name</label>
                                     <input class="form-control" type="text" id="username"
@@ -355,7 +369,7 @@
 
                                 <div class="form-group">
                                     <label for="password">Change Password</label>
-                                    <input class="form-control" type="password" required="" minlength="6"
+                                    <input class="form-control" type="password" minlength="6"
                                         id="password" placeholder="Enter new password" name="pwd">
                                 </div>
 
@@ -730,113 +744,14 @@
                             <!--php-code 
                                 if ('{user.role}' === 'admin')
                                 {
-                                    return '<div class="card-body">
-                                        <div class="d-flex align-items-center mb-4">
-                                            <h4 class="card-title">Staff List</h4>
-                                            
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
-                                                <thead>
-                                                    <tr class="border-0">
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">
-                                                        </th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Sellers
-                                                        </th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Gift Cards
-                                                        </th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Gift Cards Sold</th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Sales</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <%=list dataset="users"
-                                                        <tr>
-                                                            <td class="border-top-0 px-2 py-4">
-                                                                <div class="row">
-                                                                    <div class="col-lg-3">
-                                                                        <div class="grid-container">
-                                                                            <img src="src/assets/images/users/user.png" alt="user" class="rounded-circle" width="40">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-3">
-                                                                        <div class="grid-container">
-                                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium"> {staff.name}</h5>
-                                                                            <span class="text-muted font-14">{staff.email}</span><br/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                
-                                                                <a id="" href="?del={staff.id.encoded}&u={staff.name} ({staff.email})&role=staff" style="border:none;width:25%;margin-top:10px" title="Delete Staff" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">delete</a>
-                                                            </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalsellers}</td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalcards}</td>
-                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{staff.totalcards.sold}
-                                                            </td>
-                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${staff.sales}
-                                                            </td>
-                                                        </tr>
-                                                    =%>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>';
+                                    return '{admin.users}';
                                 } 
                             endcode-->
                             
                             <!--php-code 
                                 if ('{user.role}' === 'staff')
                                 {
-                                    return '<div class="card-body">
-                                        <div class="d-flex align-items-center mb-4">
-                                            <h4 class="card-title">Sellers List</h4>
-                                            
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
-                                                <thead>
-                                                    <tr class="border-0">
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">
-                                                        </th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted px-2">Gift Cards
-                                                        </th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Gift Cards Sold</th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Total Sales</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <%=list dataset="sellers"
-                                                        <tr>
-                                                            <td class="border-top-0 px-2 py-4">
-                                                                <div class="row">
-                                                                    <div class="col-lg-3">
-                                                                        <div class="grid-container">
-                                                                            <img src="src/assets/images/users/user.png" alt="user" class="rounded-circle" width="40">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-3">
-                                                                        <div class="grid-container">
-                                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium">{seller.name}</h5>
-                                                                            <span class="text-muted font-14">{seller.email}</span><br/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <a id="" href="?del={seller.id.encoded}&u={seller.name} ({seller.email})&role=seller" style="border:none;width:25%;margin-top:10px" title="Delete Staff" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">delete</a>
-                                                            </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">
-                                                                Amt: {seller.totalcards}<br/>
-                                                                <button type="button" class="btn btn-secondary btn-outline" data-toggle="tooltip" data-placement="top" title="" data-original-title="{tooltip.text}">Gift Cards ({seller.totalgiftcards})</button>
-
-                                                            </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{seller.totalcards.sold}</td>
-                                                            <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${seller.sales}
-                                                            </td>
-                                                        </tr>
-                                                    =%>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>';
+                                    return '{staff.users}';
                                 } 
                             endcode-->
 

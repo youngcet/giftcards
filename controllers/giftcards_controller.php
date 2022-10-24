@@ -129,7 +129,7 @@
 			return 1;
 		}
 
-		public function InsertNotification ($sellerid, $title, $text)
+		public function InsertNotification ($sellerid, $title, $text, $profileimg)
 		{
 			$sql = $this->db_handler->prepareStatement (INSERT_NOTIFICATION);
 			if (App\Custom\Error::IsAnError ($sql))
@@ -137,7 +137,7 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$sellerid, $title, $text], 'iss');
+			$sql = $this->db_handler->executeStatement ([$sellerid, $title, $text, $profileimg], 'isss');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;

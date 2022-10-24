@@ -4,13 +4,9 @@
 
     class Admin implements Role
     {
-        public function AddUserModal() 
+        public function getUsersHTMLFile() 
         {
-            $modaldetails = array 
-                (
-                    '[modal.title}' => 'Staff Details',
-                    '{add_button.title}' => 'Add Staff'
-                );
+            return App\Constants::HTML_PAGES_DIR.'admin.html';
         }
     }
 ?>

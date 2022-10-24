@@ -1,0 +1,51 @@
+<div class="card-body">
+<div class="d-flex align-items-center mb-4">
+    <h4 class="card-title">Staff List</h4>
+    
+</div>
+<div class="table-responsive">
+    <table id="zero_config" class="table table-striped table-bordered no-wrap">
+        <thead>
+            <tr class="border-0">
+                <th class="border-0 font-14 font-weight-medium text-muted">
+                </th>
+                <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Sellers
+                </th>
+                <th class="border-0 font-14 font-weight-medium text-muted px-2">Total Gift Cards
+                </th>
+                <th class="border-0 font-14 font-weight-medium text-muted">Total Gift Cards Sold</th>
+                <th class="border-0 font-14 font-weight-medium text-muted">Total Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%=list dataset="users"
+                <tr>
+                    <td class="border-top-0 px-2 py-4">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="grid-container">
+                                    <img src="{staff.profileimg}" alt="user" class="rounded-img" width="40">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="grid-container">
+                                    <h5 class="text-dark mb-0 font-16 font-weight-medium"> {staff.name}</h5>
+                                    <span class="text-muted font-14">{staff.email}</span><br/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a id="" href="?del={staff.id.encoded}&u={staff.name} ({staff.email})&role=staff" style="border:none;width:25%;margin-top:10px" title="Delete Staff" class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">delete</a>
+                    </td>
+                    <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalsellers}</td>
+                    <td class="border-top-0 text-muted px-2 py-4 font-14">{staff.totalcards}</td>
+                    <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{staff.totalcards.sold}
+                    </td>
+                    <td class="font-weight-medium text-dark border-top-0 px-2 py-4">${staff.sales}
+                    </td>
+                </tr>
+            =%>
+        </tbody>
+    </table>
+</div>
+</div>

@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="src/assets/images/favicon.png">
-    <title>GiftAdmin - GiftCards</title>
+    <title>GiftAdmin - Redeem</title>
     <!-- Custom CSS -->
     <link href="src/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="src/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
@@ -102,8 +102,37 @@
                     <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
                         <!-- Notification -->
                         <li class="nav-item dropdown">
-                            <button class="btn btn-success text-white rounded-circle btn-circle font-20" data-toggle="modal" data-target="#{modal.details}">+</button>
-                            <span class="ml-2 d-none d-lg-inline-block"><span class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">Create {user.modal.title}</span></span>
+                            <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)" id="bell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell svg-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                                <span class="badge badge-primary notify-no rounded-circle">{notification.count}</span>
+                            </a>
+                                <!--php-code 
+                                    if ({notification.count} > 0)
+                                    {
+                                        return '<div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
+                                            <ul class="list-style-none">
+                                            <%=list dataset="notifications"
+                                            <li>
+                                                <div class="message-center notifications position-relative ps-container ps-theme-default" data-ps-id="e2c71344-31b5-84c6-a0eb-7799fb9d0997">
+                                                
+                                                    <a href="javascript:void(0)" class="message-item d-flex align-items-center border-bottom px-3 py-2">
+                                                        <div class=""><img src="{notification.profileimg}" alt="user" class="rounded-circle" width="40"></div>
+                                                        <div class="w-75 d-inline-block v-middle pl-2">
+                                                            <h6 class="message-title mb-0 mt-1">{notification.title}</h6>
+                                                            <span class="font-12 text-nowrap d-block text-muted">{notification.text}!</span>
+                                                            <span class="font-12 text-nowrap d-block text-muted">{notification.time}</span>
+                                                        </div>
+                                                    </a>
+                                                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                                            </li>
+                                            =%>
+                                            <li>
+                                                <form action="" method="post"><input type="hidden" value="{notification.id}" name="id"><input style="border:none;background:transparent;padding:10px;font-size:12px" type="submit" name="seen" value="Mark All As Read >"></form>
+                                            </li>
+                                        </ul>
+                                        </div>';
+                                    }
+                                 endcode-->
                         </li>
                     </ul>
                     <!-- ============================================================== -->
@@ -130,7 +159,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                <img src="{profile_img}" alt="user" class="rounded-img"
+                                <img src="{profile_img}" alt="user" class="rounded-circle"
                                     width="40">
                                 <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
                                         class="text-dark">{user.fname} {user.lname}</span> <i data-feather="chevron-down"
@@ -162,50 +191,6 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <!--php-code 
-                            if ('{user.role}' === 'admin') 
-                            {
-                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
-                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
-                                    class="hide-menu">Dashboard</span></a></li>
-                                <li class="list-divider"></li>
-                                <li class="nav-small-cap"><span class="hide-menu">Staff</span></li>
-
-                                <li class="sidebar-item"> <a class="sidebar-link" href=""
-                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                            class="hide-menu">Staff List 
-                                        </span></a>
-                                </li>';
-                            }
-                        endcode-->
-
-                        <!--php-code 
-                            if ('{user.role}' === 'staff') 
-                            {
-                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
-                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
-                                    class="hide-menu">Dashboard</span></a></li>
-                                <li class="list-divider"></li>
-                                <li class="nav-small-cap"><span class="hide-menu">Lists</span></li>
-
-                                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index#zero_config"
-                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                            class="hide-menu">Sellers 
-                                        </span></a>
-                                </li>
-                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Gift Cards </span></a>
-                                <ul aria-expanded="false" class="collapse first-level base-level-line">
-                                    <li class="sidebar-item"><a href="giftcards" class="sidebar-link"><span class="hide-menu"> Active
-                                            </span></a>
-                                    </li>
-                                    <li class="sidebar-item"><a href="giftcards?redeemed" class="sidebar-link"><span class="hide-menu"> Redeemed
-                                            </span></a>
-                                    </li>
-                                </ul>
-                            </li>';
-                            }
-                        endcode-->
-
-                        <!--php-code 
                             if ('{user.role}' === 'seller') 
                             {
                                 return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
@@ -214,14 +199,13 @@
                                 <li class="list-divider"></li>
                                 <li class="nav-small-cap"><span class="hide-menu">Gift Cards</span></li>
 
-                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                <li class="sidebar-item"> <a class="sidebar-link" href="index?#zero_config"
                                         aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
                                             class="hide-menu">Gift Card List 
                                         </span></a>
                                 </li>';
                             }
                         endcode-->
-                        
                         <li class="list-divider"></li>
                         <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index?logout"
                                 aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
@@ -259,178 +243,19 @@
                                 </div>';
                     } 
             endcode-->
-            <div id="newuser-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="text-center mt-2 mb-4">
-                                <h2>{user.modal.title} Details</h2>
-                            </div>
-
-                            <form class="pl-3 pr-3" action="#" method="post">
-
-                                <div class="form-group">
-                                    <label for="username">Name</label>
-                                    <input class="form-control" type="text" id="username"
-                                        required="" placeholder="Cedric Maenetja" name="name">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="emailaddress">Email address</label>
-                                    <input class="form-control" type="email" id="emailaddress"
-                                        required="" placeholder="cedric@deo.com" name="email">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input class="form-control" type="password" required="" minlength="6"
-                                        id="password" placeholder="Enter your password" name="pwd">
-                                </div>
-
-                                <div class="form-group text-center">
-                                    <button class="btn btn-primary" type="submit" name="addUser">Create User</button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div>
-            <div id="myprofile-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="text-center mt-2 mb-4">
-                                <h2>My Details</h2>
-                            </div>
-
-                            <form class="pl-3 pr-3" action="#" method="post">
-                                <div class="form-group">
-                                    <label for="username">Name</label>
-                                    <input class="form-control" type="text" id="username"
-                                        required="" name="name" value="{user.fname} {user.lname}" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="emailaddress">Email address</label>
-                                    <input class="form-control" type="email" id="emailaddress"
-                                        required="" value="{user.email}" name="email" disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password">Change Password</label>
-                                    <input class="form-control" type="password" required="" minlength="6"
-                                        id="password" placeholder="Enter new password" name="pwd">
-                                </div>
-
-                                <div class="form-group text-center">
-                                    <button class="btn btn-primary" type="submit" name="updatePwd">Save Changes</button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div>
-            <div id="newcard-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="text-center mt-2 mb-4">
-                                <h3>{user.modal.title} Details</h3>
-                            </div>
-
-                            <form class="pl-3 pr-3" action="#" method="post">
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <input class="form-control" type="text" id="title" required="" placeholder="Enter title" name="title" minlength="4" maxlength="30">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="desc">Description</label>
-                                    <textarea class="form-control" maxlength="200" placeholder="Enter description" id="desc" name="desc"></textarea>
-                                </div>
-                                <br/>
-                                <div class="row" style="background-color: #f4f8fb;">
-                                    <div class="col-lg-3">
-                                        <div class="grid-container">
-                                            <div class="form-group">
-                                                <label for="qty">Quantity</label>
-                                                <input id="qty" class="form-control" type="number" required="" placeholder="e.g 200" name="qty">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="grid-container">
-                                            <div class="form-group">
-                                                <label for="price">Price per GiftCard ($)</label>
-                                                <input id="price" class="form-control" type="text" required="" placeholder="e.g 200" name="price">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="grid-container">
-                                            <div class="form-group">
-                                                <label for="color">Card Color</label>
-                                                <input id="color" class="form-control" type="color" name="color">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="grid-container">
-                                            <div class="form-group">
-                                                <label for="date">Expiry Date</label>
-                                                <input id="date" class="form-control" type="date" name="date">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="grid-container">
-                                            <small>This user will have access to this gift card.</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="grid-container">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect01">Assign To:</label>
-                                                </div>
-                                                <select class="custom-select" id="inputGroupSelect01" name="assignee">
-                                                    <option selected="">Choose ...</option>
-                                                    <%=list dataset="allsellers"
-                                                    <option value="{seller.id}">{seller.name} {seller.lname} ({seller.email})</option>
-                                                    =%>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group text-center">
-                                    <button class="btn btn-primary" type="submit" name="createCard">Create Gift Card</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
             <!-- ============================================================== -->
             <!-- Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-7 align-self-center">
-                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Active Gift Cards</h3>
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Redeem</h3>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
                                     <li class="breadcrumb-item"><a href="index">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item text-muted active" aria-current="page">Gift Cards</li>
+                                    <li class="breadcrumb-item text-muted active" aria-current="page">Redeem Gift Cards</li>
                                 </ol>
                             </nav>
                         </div>
@@ -452,24 +277,7 @@
             <!-- ============================================================== -->
             <div class="container-fluid">
                 <div class="row">
-                    <!--php-code
-                        if ('{total.giftcards}')
-                        {
-                            return '<div class="col-lg-12">
-                                <div class="grid-container">
-                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        No Gift Cards created yet!
-                                    </div>
-                                </div>
-                            </div>';
-                        }
-                    endcode-->
-                    
-                    <%=list dataset="giftcards"
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card text-white bg-dark" style="background-color: {card.color} !important;">
                             <div class="card-header">
                                 <h4 class="mb-0 text-white">{card.title}</h4>
@@ -478,38 +286,48 @@
                                 <h3 class="card-title text-white">${card.price}</h3>
                                 <p class="card-text">{card.description}</p>
                                 <div class="giftcard_buttons">
-                                    <small><i class="fa fa-user"></i>
-                                        {card.sellerfname} {card.sellerlname} &nbsp; 
-                                        <a id="edit{card.id}" href="javascript:assignUser('{card.id}')" style="color: white;" title="click to assign a new user"><i class="fa fa-edit"></i></a>
-                                        <a id="close{card.id}" href="javascript:hideUsers('{card.id}')" style="color: white;margin-left:8px;display: none;" title="close dropdown"><i class="fa fa-close"></i></a>
-                                        <div id="card{card.id}" style="display: none;">
-                                            <form class="mt-4" action="" method="post" id="form{card.id}">
-                                                <input name="card" value="{card.id}" type="hidden"/>
-                                                <input name="title" value="{card.title}" type="hidden"/>
-                                                <div class="input-group">
-                                                    <select class="custom-select" id="dropdown{card.id}" name="assignuser" onchange="this.form.submit()">
-                                                        <option selected="">Choose...</option>
-                                                        <option value="0">Leave Unassigned</option>
-                                                        {allsellers}
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </small><br/>
-                                    <small><i class="fa fa-hashtag"></i> Card No. {card.voucherno}</small> <br/>
+                                    <small><i class="fa fa-hashtag"></i> Card No. {card.number}</small> <br/>
                                     <small><i class="fa fa-clone"></i> qty. {card.qty}</small> 
-                                    <small style="margin-left: 10px;"><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
-                                    <small style="margin-left: 10px;"><i class="fa fa-trash"></i> 
-                                    <form style="display: inline;margin-left:-6px" method="post" action="">
-                                        <input type="hidden" value="{card.id}" name="cardid">
-                                        <input type="submit" style="background:transparent;border:none;color: white;" name="deletecard" value="delete">
-                                    </form>
-                                    </small>
+                                    <small style="margin-left: 10px;"><i class="fa fa-calendar"></i> exp. {card.expirydate}</small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    =%>
+                    <div class="col-md-6">
+                        <div class="card text-white bg-white">
+                            <div class="card-header">
+                                <h4 class="mb-0 text-dark">Redeem Options</h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text text-dark">Select the amount of gift cards to redeem and click redeem</p>
+                                <div class="row">
+                                    <form action="" method="post">
+                                        <div class="col-md-8">
+                                            <div class="grid-container">
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control" value="{card.qty}" name="qty">
+                                                    <input type="hidden" value="{card.id}" name="id">
+                                                    <input type="hidden" value="{card.qty}" name="current_qty">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--php-code 
+                                            return ('{iscardactive}') ? '<div class="col-md-2">
+                                                    <div class="grid-container">
+                                                        <button type="submit" class="btn btn-info" name="redeemcard">Redeem</button>
+                                                        </div>
+                                                    </div>' : '<div class="col-md-12">
+                                                        <div class="grid-container">
+                                                            <div class="alert alert-success" role="alert">
+                                                                <h4 class="alert-heading">Redeemed!</h4>
+                                                                <p>This card has been redeemed and you can no longer redeem for this gift card.</p>
+                                                    </div></div></div>';
+                                        endcode-->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- *************************************************************** -->
                 <!-- End Top Leader Table -->
@@ -559,22 +377,6 @@
     <script src="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
     <script src="src/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
     <script src="src/dist/js/pages/dashboards/dashboard1.min.js"></script>
-
-    <script>
-        function assignUser(id){
-            $('#card'+id).css('display', 'block');
-            $('#close'+id).css('display', 'inline');
-        }
-
-        function hideUsers (id){
-            $('#card'+id).css('display', 'none');
-            $('#close'+id).css('display', 'none');
-        }
-
-        function updateUser(formid){
-            $('#'+formid).submit();
-        }
-    </script>
 </body>
 
 </html>

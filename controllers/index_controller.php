@@ -159,6 +159,46 @@
 			return $record;
 		}
 
+		public function UpdateUserProfileImg ($role, $img, $id)
+		{
+			if ($role == App\Constants::ADMIN) $sql = $this->db_handler->prepareStatement (UPDATE_ADMIN_PROFILE_IMG);
+			if ($role == App\Constants::STAFF) $sql = $this->db_handler->prepareStatement (UPDATE_STAFF_PROFILE_IMG);
+			if ($role == App\Constants::SELLER) $sql = $this->db_handler->prepareStatement (UPDATE_SELLER_PROFILE_IMG);
+
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$img, $id], 'si');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function SelectUserInfo ($role, $id)
+		{
+			if ($role == App\Constants::ADMIN) $sql = $this->db_handler->prepareStatement (SELECT_ADMIN_USER_BY_ID);
+			if ($role == App\Constants::STAFF) $sql = $this->db_handler->prepareStatement (SELECT_STAFF);
+			if ($role == App\Constants::SELLER) $sql = $this->db_handler->prepareStatement (SELECT_SELLER);
+
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchRow();
+		}
+
 		public function GetAllSellers ($id)
 		{
 			$allsellers = $this->db_handler->prepareStatement (SELECT_ALL_SELLERS);
@@ -402,6 +442,23 @@
 			if ($type == App\Constants::SELLER) $query = DELETE_SELLER;
 
 			$sql = $this->db_handler->prepareStatement ($query);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function DeleteNotification ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (DELETE_NOTIFICATION);
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;

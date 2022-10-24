@@ -20,11 +20,13 @@
         const GOOD_MORNING_MESSAGE = 'Good Morning';
         const NEW_USER_NOTIFICATION = 'New User Created!';
         const NEW_CARD_NOTIFICATION = 'New Card Created!';
-        const CARD_SOLD_NOTIFICATION = 'Gift Card Redeem!';
+        const CARD_SOLD_NOTIFICATION = 'Gift Card Redeemed!';
         const CARD_UPDATED_NOTIFICATION = 'Gift Cards Updated!';
         const REGISTRATION_SUCCESS_MSG = 'Registration Successful. You can sign in below!';
         const CHANGES_SAVED = 'Changes Saved!';
         const HTML_PAGES_DIR = 'src/html/';
+        const USER_IMG_DIR = 'src/assets/images/users/';
+        const DEFAULT_USER_PROFILE_IMG = 'src/assets/images/users/user.png';
 
         const ERROR_NOTIFICATION_HTML = '{error.notification}';
         const REGISTRATION_NOTIFICATION_HTML = '{registration.success}';
@@ -32,7 +34,7 @@
 
         const EMAIL_ADDRESS_EXISTS = 'Email Address Exists. Please choose a different email address!';
         const LOGIN_FAILED_MSG = 'Email or Password Incorrect!';
-        const GIFTCARDS_EXCEEDED = 'Gift Cards exceeded. Please contact your administrator to add more!';
+        const GIFTCARDS_EXCEEDED = 'Quantity to Redeem is greater than available Gift Cards!';
 
 
         // status codes

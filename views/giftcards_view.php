@@ -24,8 +24,14 @@
 			$data['{user.role}'] = $_SESSION['role'];
             $data['{modal.details}'] = 'newcard-modal';
             $data['{user.modal.title}'] = 'Gift Card';
-            $data['giftcards'] = $data['sellers'] = array();
-            $data['{total.giftcards}'] = false;
+            $data['giftcards'] = $data['sellers'] = $data['giftcards_redeemed'] = array();
+            $data['{total.giftcards}'] = $data['{total.giftcards_redeemed}'] = false;
+            $data['{html.page}'] = 'giftcards.html';
+            $data['{profile_img}'] = $_SESSION['profile_img'];
+            $data['allsellers'] = array();
+
+
+            if (isset ($_GET['redeemed'])) $data['{html.page}'] = 'redeemed.html';
 
             if (isset ($_POST['deletecard']))
             {
@@ -59,7 +65,7 @@
                 }
                 else
                 {
-                    $this->controller->InsertNotification ($assignee, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card");
+                    $this->controller->InsertNotification ($assignee, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card", $_SESSION['profile_img']);
                     $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::NEW_CARD_NOTIFICATION;
                 }
             }
@@ -79,7 +85,7 @@
                 {
                     if ($sellerid != 0)
                     {
-                        $this->controller->InsertNotification ($sellerid, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card");
+                        $this->controller->InsertNotification ($sellerid, $_SESSION['fname'].' '.$_SESSION['lname'], "Assigned you to $title gift card", $_SESSION['profile_img']);
                     }
                 
                     $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
@@ -111,8 +117,6 @@
                 $data[App\Constants::ERROR_NOTIFICATION_HTML] = $giftcards->GetError();
             }
 
-            if (empty ($giftcards)) $data['{total.giftcards}'] = true;
-
             foreach ($giftcards as $giftcard)
             {
                 if ($giftcard['color'] == '') $giftcard['color'] = '#000';
@@ -137,8 +141,26 @@
                 }
                 
                 if ($giftcard['expiry_date'] == '') $giftcard['expiry_date'] = App\Constants::NOT_APPLICABLE;
-
-                $data['giftcards'][] = array
+                if ($giftcard['qty'] == $giftcard['qty_sold']) 
+                {
+                    $data['giftcards_redeemed'][] = array
+                        (
+                            '{card.id}' => $giftcard['id'],
+                            '{card.title}' => $giftcard['title'],
+                            '{card.description}' => $giftcard['description'],
+                            '{card.price}' => $giftcard['price'],
+                            '{card.color}' => $giftcard['color'],
+                            '{card.qty}' => $giftcard['qty'],
+                            '{card.expiry_date}' => $giftcard['expiry_date'],
+                            '{card.qty}' => $giftcard['qty'],
+                            '{card.sellerfname}' => $giftcard['sellerfname'],
+                            '{card.sellerlname}' => $giftcard['sellerlname'],
+                            '{card.voucherno}' => $giftcard['card_number']
+                        );
+                }
+                else
+                {
+                    $data['giftcards'][] = array
                     (
                         '{card.id}' => $giftcard['id'],
                         '{card.title}' => $giftcard['title'],
@@ -152,7 +174,11 @@
                         '{card.sellerlname}' => $giftcard['sellerlname'],
                         '{card.voucherno}' => $giftcard['card_number']
                     );
+                }
             }
+
+            if (empty ($data['giftcards'])) $data['{total.giftcards}'] = true;
+            if (empty ($data['giftcards_redeemed'])) $data['{total.giftcards_redeemed}'] = true;
            
             $this->model->render ($data);
         }
