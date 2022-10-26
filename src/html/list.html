@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="src/assets/images/favicon.png">
+    <title>GiftAdmin - {group.card.title}</title>
+    <!-- Custom CSS -->
+    <link href="src/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="src/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="src/dist/css/style.min.css" rel="stylesheet">
+    <link href="src/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <style>
+        .table td {
+            padding: 1rem !important;
+            vertical-align: top !important;
+            border-top: 1px solid #e8eef3 !important;
+        }
+        table.dataTable tr th.select-checkbox.selected::after {
+            content: "✔";
+            margin-top: -11px;
+            margin-left: -4px;
+            text-align: center;
+            text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-md">
+                <div class="navbar-header" data-logobg="skin6">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="navbar-brand">
+                        <!-- Logo icon -->
+                        <a href="/">
+                            <b class="logo-icon">
+                                <!-- Dark Logo icon -->
+                                <img src="src/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                                <!-- Light Logo icon -->
+                                <img src="src/assets/images/logo-icon.png" alt="homepage" class="light-logo" />
+                            </b>
+                            <!--End Logo icon -->
+                            <!-- Logo text -->
+                            <span class="logo-text" style="font-size: 25px;">
+                                <!-- dark Logo text -->
+                                Gift<font style="font-weight: bold;">Admin</font>
+                            </span>
+                        </a>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
+                        data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)" id="bell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell svg-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                                <span class="badge badge-primary notify-no rounded-circle">{notification.count}</span>
+                            </a>
+                                <!--php-code 
+                                    if ({notification.count} > 0)
+                                    {
+                                        return '<div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
+                                            <ul class="list-style-none">
+                                            <%=list dataset="notifications"
+                                            <li>
+                                                <div class="message-center notifications position-relative ps-container ps-theme-default" data-ps-id="e2c71344-31b5-84c6-a0eb-7799fb9d0997">
+                                                
+                                                    <a href="javascript:void(0)" class="message-item d-flex align-items-center border-bottom px-3 py-2">
+                                                        <div class=""><img src="{notification.profileimg}" alt="user" class="rounded-circle" width="40"></div>
+                                                        <div class="w-75 d-inline-block v-middle pl-2">
+                                                            <h6 class="message-title mb-0 mt-1">{notification.title}</h6>
+                                                            <span class="font-12 text-nowrap d-block text-muted">{notification.text}!</span>
+                                                            <span class="font-12 text-nowrap d-block text-muted">{notification.time}</span>
+                                                        </div>
+                                                    </a>
+                                                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                                            </li>
+                                            =%>
+                                            <li>
+                                                <form action="" method="post"><input type="hidden" value="{notification.id}" name="id"><input style="border:none;background:transparent;padding:10px;font-size:12px" type="submit" name="seen" value="Mark All As Read >"></form>
+                                            </li>
+                                        </ul>
+                                        </div>';
+                                    }
+                                 endcode-->
+                        </li>
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-right">
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item d-none d-md-block">
+                            <a class="nav-link" href="javascript:void(0)">
+                                <form>
+                                    <div class="customize-input">
+                                        <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                            type="search" placeholder="Search" aria-label="Search">
+                                        <i class="form-control-icon" data-feather="search"></i>
+                                    </div>
+                                </form>
+                            </a>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <img src="{profile_img}" alt="user" class="rounded-img"
+                                    width="40">
+                                <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
+                                        class="text-dark">{user.fname} {user.lname}</span> <i data-feather="chevron-down"
+                                        class="svg-icon"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                                <a class="dropdown-item" data-toggle="modal" data-target="#myprofile-modal" style="cursor: pointer;"><i data-feather="user"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    My Profile</a>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
+                            aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                class="hide-menu">Dashboard</span></a></li>
+                            <li class="list-divider"></li>
+                            <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu"><i class="fas fa-gift"></i> Gift Cards </span></a>
+                            <ul aria-expanded="false" class="collapse first-level base-level-line">
+                                <%=for("maincards")
+                                <li class="sidebar-item"><a href="list?group={card.number}" class="sidebar-link"><span class="hide-menu"> {card.title}</span></a></li>
+                                =%>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu"><i class="fas fa-archive"></i> Redeemed Gift Cards</span></a>
+                            <ul aria-expanded="false" class="collapse first-level base-level-line">
+                                <%=for("maincards")
+                                <li class="sidebar-item"><a href="list?group={card.number}&redeemed" class="sidebar-link"><span class="hide-menu"> {card.title}</span></a></li>
+                                =%>
+                            </ul>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index?logout"
+                                aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
+                                    class="hide-menu">Logout</span></a></li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        
+        <div class="page-wrapper">
+            <!--php-code 
+                if ('{error.notification}' !== '')
+                    {
+                        return '<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <strong>Error - </strong> {error.notification}
+                                </div>';
+                    } 
+                endcode-->
+                <!--php-code 
+                    if ('{success.notification}' !== '')
+                    {
+                        return '<div class="alert alert-success" role="alert">
+                                    <strong>Success - </strong> {success.notification}
+                                </div>';
+                    } 
+            endcode-->
+            <div id="newuser-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h2>{user.modal.title} Details</h2>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post">
+
+                                <div class="form-group">
+                                    <label for="username">Name</label>
+                                    <input class="form-control" type="text" id="username"
+                                        required="" placeholder="Cedric Maenetja" name="name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailaddress">Email address</label>
+                                    <input class="form-control" type="email" id="emailaddress"
+                                        required="" placeholder="cedric@deo.com" name="email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input class="form-control" type="password" required="" minlength="6"
+                                        id="password" placeholder="Enter your password" name="pwd">
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="addUser">Create User</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div id="myprofile-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h2>My Details</h2>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post" enctype="multipart/form-data">
+
+                                <fieldset class="form-group">
+                                    <label for="username">Profile Image</label>
+                                    <input type="file" class="form-control-file" id="exampleInputFile" name="img" accept="image/*">
+                                </fieldset>
+                                <br/>
+                                <div class="form-group">
+                                    <label for="username">Name</label>
+                                    <input class="form-control" type="text" id="username"
+                                        required="" name="name" value="{user.fname} {user.lname}" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailaddress">Email address</label>
+                                    <input class="form-control" type="email" id="emailaddress"
+                                        required="" value="{user.email}" name="email" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Change Password</label>
+                                    <input class="form-control" type="password" minlength="6"
+                                        id="password" placeholder="Enter new password" name="pwd">
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="updatePwd">Save Changes</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div id="newcard-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h2>{user.modal.title} Details</h2>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post">
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input class="form-control" type="text" id="title" required="" placeholder="Enter title" name="title">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="desc">Description</label>
+                                    <textarea class="form-control" maxlength="200" placeholder="Enter description" id="desc" name="desc"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input id="price" class="form-control" type="text" required="" placeholder="e.g 200" name="price">
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="createCard">Create Card</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">{group.card.title}</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="index">Dashboard</a>
+                                    </li>
+                                    <li class="breadcrumb-item text-muted active" aria-current="page">{group.card.title} Gift Cards</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-right">
+                            <select class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
+                                <option selected>{current.month} {current.day}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- *************************************************************** -->
+                <!-- Start First Cards -->
+                <!-- *************************************************************** -->
+                <!-- *************************************************************** -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="grid-container">
+                                                <h4 class="card-title" style="padding: 5px"><i class="fas fa-gift"></i> Gift Card:</h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2" style="margin-left: -80px;">
+                                            <div class="grid-container">
+                                                <form method="get" action="">
+                                                    <select name="group" class="custom-select mr-sm-2" onchange="this.form.submit()">
+                                                        <%=for("maincards")
+                                                        <option value="{card.number}" {card.selected}>{card.title}</option>
+                                                        =%>
+                                                    </select>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="table-responsive">
+                                        <table id="zero_config" class="table table-striped table-bordered no-wrap">
+                                            <thead>
+                                                <tr class="border-0">
+                                                    <th class="border-0 font-14 font-weight-medium text-muted"></th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Card No. <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="dashes are optional, can also be alphanumeric"></i></th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Description</th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Action</th>
+                                                        <th class="border-0 font-14 font-weight-medium text-muted">Expiring On</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <%=list dataset="cards"
+                                                    <tr>
+                                                        <td class="border-top-0 px-2 py-4">
+                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium"> {card.title}</h5>
+                                                            <span class="text-muted font-14">${card.price}</span><br/>
+                                                        </td>
+                                                        <td class="border-top-0 text-muted px-2 py-4 font-14">
+                                                            <form action="" method="post">
+                                                                <div class="form-group">
+                                                                    <input type="hidden" value="{card.id}" name="id">
+                                                                    <input required placeholder="1234-5678-9101-1123" type="text" class="form-control" value="{card.number}" name="card_number" maxlength="19" minlength="10">
+                                                                    <input type="submit" name="updatecardnumber" value="update" style="border: none;background:transparent;color: #5f76e8;">
+                                                                </div>
+                                                            </form>
+                                                        </td>
+                                                        <td class="border-top-0 text-muted px-2 py-4 font-14">{card.description}</td>
+                                                        <td class="font-weight-medium text-dark border-top-0 px-2 py-4"><!--php-code return ('{iscardactive}') ? '<form action="" method="post"><input type="hidden" value="{card.number}" name="cardno"><input type="hidden" value="{card.id}" name="id"><input type="submit" name="redeemcard" value="redeem" title="click to redeem gift card" style="border: none;background:transparent;color: #5f76e8;"></form>' : 'Redeemed';endcode--></td>
+                                                        <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{card.expirydate}</td>
+                                                    </tr>
+                                                =%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- *************************************************************** -->
+                <!-- End Top Leader Table -->
+                <!-- *************************************************************** -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center text-muted">
+                All Rights Reserved by GiftAdmin. Designed and Developed by <a
+                    href="">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="src/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="src/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="src/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="src/dist/js/app-style-switcher.js"></script>
+    <script src="src/dist/js/feather.min.js"></script>
+    <script src="src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="src/dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="src/dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <script src="src/assets/extra-libs/c3/d3.min.js"></script>
+    <script src="src/assets/extra-libs/c3/c3.min.js"></script>
+    <script src="src/assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="src/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="src/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="src/dist/js/pages/dashboards/dashboard1.min.js"></script>
+    <script src="src/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="src/dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#seller_giftcards').DataTable( {
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                } ],
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
+                order: [[ 1, 'asc' ]]
+            } );
+        } );
+    </script>
+</body>
+
+</html>

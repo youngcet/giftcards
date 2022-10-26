@@ -8,11 +8,19 @@
         const ADMIN = 'admin';
         const STAFF = 'staff';
         const SELLER = 'seller';
+        const ACTIVE = 'active';
         const SUCCESS = 'success';
         const GIFTCARD = 'Gift Card';
         const NOT_APPLICABLE = 'N/A';
+        const REDEEMED = 'redeemed';
+        const FREEZE = 'freeze';
+        const UNFREEZE = 'unfreeze';
         const USER_DELETED_MSG = 'User Deleted Successful!';
         const CARD_DELETED_MSG = 'Card Deleted Successful!';
+        const CARD_NUMBER_EXISTS = 'Card number Exists! Please choose a different card number.';
+        const NO_CARD_NUMBER = 'Please update the card number before redeeming this card.';
+        const FREEZE_MESSAGE = 'this gift card is visible to the seller';
+        const UNFREEZE_MESSAGE = 'this gift card is hideen to the seller';
 
         const NEW_STAFF = 'New Staff';
         

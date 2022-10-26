@@ -188,11 +188,11 @@
                                 <li class="nav-small-cap"><span class="hide-menu">Lists</span></li>
 
                                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index#zero_config"
-                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                        aria-expanded="false"><i class="fas fa-users"></i><span
                                             class="hide-menu">Sellers 
                                         </span></a>
                                 </li>
-                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Gift Cards </span></a>
+                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu"><i class="fas fa-gift"></i> Gift Cards </span></a>
                                 <ul aria-expanded="false" class="collapse first-level base-level-line">
                                     <li class="sidebar-item"><a href="giftcards" class="sidebar-link"><span class="hide-menu"> Active
                                             </span></a>
@@ -475,7 +475,7 @@
                                 <h4 class="mb-0 text-white">{card.title}</h4>
                             </div>
                             <div class="card-body">
-                                <h3 class="card-title text-white">${card.price}</h3>
+                                <h3 class="card-title text-white">${card.price} /<small>{card.qty}</small></h3>
                                 <p class="card-text">{card.description}</p>
                                 <div class="giftcard_buttons">
                                     <small><i class="fa fa-user"></i>
@@ -496,14 +496,20 @@
                                             </form>
                                         </div>
                                     </small><br/>
-                                    <small><i class="fa fa-hashtag"></i> Card No. {card.voucherno}</small> <br/>
-                                    <small><i class="fa fa-clone"></i> qty. {card.qty}</small> 
-                                    <small style="margin-left: 10px;"><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
-                                    <small style="margin-left: 10px;"><i class="fa fa-trash"></i> 
-                                    <form style="display: inline;margin-left:-6px" method="post" action="">
-                                        <input type="hidden" value="{card.id}" name="cardid">
-                                        <input type="submit" style="background:transparent;border:none;color: white;" name="deletecard" value="delete">
-                                    </form>
+                                    <small><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
+                                    <small style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="{card.status.msg}"><!--php-code return ('{card.status}' != 'freeze') ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>'; endcode-->
+                                        <form style="display: inline;margin-left:-6px" method="post" action="">
+                                            <input type="hidden" value="{card.voucherno}" name="cardid">
+                                            <input type="hidden" value="{card.sellerid}" name="userid">
+                                            <input type="hidden" value="{card.title}" name="title">
+                                            <input type="submit" style="background:transparent;border:none;color: white;" name="{card.status}" value="{card.status}">
+                                        </form>
+                                    </small>
+                                    <small style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="delete card"><i class="fa fa-trash"></i> 
+                                        <form style="display: inline;margin-left:-6px" method="post" action="">
+                                            <input type="hidden" value="{card.voucherno}" name="cardid">
+                                            <input type="submit" style="background:transparent;border:none;color: white;" name="deletecard" value="delete">
+                                        </form>
                                     </small>
                                 </div>
                             </div>

@@ -92,6 +92,26 @@
                 }
             }
 
+            if (isset ($_POST[App\Constants::FREEZE]) || isset ($_POST[App\Constants::UNFREEZE]))
+            {
+                $cardid = trim (strip_tags($_POST['cardid']));
+                $userid = trim (strip_tags($_POST['userid']));
+                $title = trim (strip_tags ($_POST['title']));
+
+                $freezestatus = (! isset ($_POST[App\Constants::FREEZE])) ? App\Constants::FREEZE : App\Constants::UNFREEZE;
+                $freezecard = $this->controller->UpdateMainCardStatus ($freezestatus, $cardid, $userid);
+                if (App\Custom\Error::IsAnError ($freezecard))
+                {
+                    $data[App\Constants::ERROR_NOTIFICATION_HTML] = $freezecard->GetError();
+                }
+                else
+                {
+                    $freezestatus = ($freezestatus == App\Constants::UNFREEZE) ? App\Constants::FREEZE : App\Constants::UNFREEZE;
+                    App\Notification::Add (new DatabaseHandler(), $userid, $_SESSION['fname'].' '.$_SESSION['lname'], ucfirst ($freezestatus)."d $title gift card", $_SESSION['profile_img']);
+                    $data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
+                }
+            }
+
             $sellers = $this->controller->SelectAllSellers ($_SESSION['userid']);
             if (App\Custom\Error::IsAnError ($sellers))
             {
@@ -137,6 +157,7 @@
                     {
                         $giftcard['sellerfname'] = $sellerinfo['fname'];
                         $giftcard['sellerlname'] = $sellerinfo['lname'];
+                        $giftcard['sellerid'] = $sellerinfo['id'];
                     }
                 }
                 
@@ -155,11 +176,17 @@
                             '{card.qty}' => $giftcard['qty'],
                             '{card.sellerfname}' => $giftcard['sellerfname'],
                             '{card.sellerlname}' => $giftcard['sellerlname'],
+                            '{card.sellerid}' => $giftcard['sellerid'],
                             '{card.voucherno}' => $giftcard['card_number']
                         );
                 }
                 else
                 {
+                    //$statusmsg = ($giftcard['status'] == App\Constants::FREEZE || $giftcard['status'] != '') ? App\Constants::UNFREEZE_MESSAGE : App\Constants::FREEZE_MESSAGE;
+                    //$giftcard['status'] = ($giftcard['status'] == App\Constants::FREEZE || $giftcard['status'] != '') ? App\Constants::UNFREEZE : App\Constants::FREEZE;
+
+                    $statusmsg = ($giftcard['status'] == App\Constants::UNFREEZE || $giftcard['status'] == '') ? App\Constants::UNFREEZE_MESSAGE : App\Constants::FREEZE_MESSAGE;
+                    
                     $data['giftcards'][] = array
                     (
                         '{card.id}' => $giftcard['id'],
@@ -168,9 +195,12 @@
                         '{card.price}' => $giftcard['price'],
                         '{card.color}' => $giftcard['color'],
                         '{card.qty}' => $giftcard['qty'],
+                        '{card.status}' => $giftcard['status'],
+                        '{card.status.msg}' => $statusmsg,
                         '{card.expiry_date}' => $giftcard['expiry_date'],
                         '{card.qty}' => $giftcard['qty'],
                         '{card.sellerfname}' => $giftcard['sellerfname'],
+                        '{card.sellerid}' => $giftcard['sellerid'],
                         '{card.sellerlname}' => $giftcard['sellerlname'],
                         '{card.voucherno}' => $giftcard['card_number']
                     );

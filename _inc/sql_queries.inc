@@ -27,6 +27,7 @@
     define ('SELECT_ALL_SELLER_GIFTCARDS', 'SELECT * from giftcards WHERE seller_id = ?');
     define ('INSERT_GIFTCARDS_FROM_SELLER', 'INSERT INTO giftcards (seller_id, staff_id, qty) VALUES (?,?,?)');
     define ('UPDATE_GIFTCARDS_FROM_SELLER', 'UPDATE giftcards SET qty = qty + ? WHERE seller_id = ?');
+    define ('SELECT_ALL_CARDS_FOR_GUESTS', 'SELECT * FROM giftcards WHERE status != "unfreeze"');
     
     define ('SELECT_ALL_SELLERS', 'SELECT * from seller WHERE staff_id = ?');
     define ('SELECT_ALL_SELLER_EARNINGS', 'SELECT SUM(qty) as qty, SUM(qty_sold) as qty_sold, SUM(price*qty_sold) as "earnings" from giftcards WHERE staff_id = ?');
@@ -35,27 +36,38 @@
 
     define ('SELECT_ALL_MY_GIFTCARDS', 'SELECT SUM(qty) as qty, SUM(qty_sold) as qty_sold, SUM(price*qty_sold) as "earnings" from giftcards WHERE seller_id = ?');
     define ('UPDATE_GIFTCARDS_QTY', 'UPDATE giftcards SET qty = qty - 1 WHERE seller_id = ?');
-    define ('SELECT_ALL_MY_CREATED_GIFTCARDS', 'SELECT * from giftcards WHERE seller_id = ?');
+    define ('SELECT_ALL_MY_CREATED_GIFTCARDS', 'SELECT * from giftcards WHERE seller_id = ? AND status != "unfreeze"');
     define ('INSERT_GIFTCARD', 'INSERT INTO seller_giftcards (seller_id, title, description, price, status) VALUES (?,?,?,?,?)');
 
     define ('SELL_GIFTCARD', 'UPDATE giftcards SET qty_sold = ? WHERE id = ?');
+    define ('REDEEM_MAIN_GIFTCARD', 'UPDATE giftcards SET qty_sold = qty_sold + ?, qty = qty - ? WHERE card_number = ? AND seller_id = ?');
     define ('SELECT_GIFTCARD', 'SELECT * FROM giftcards WHERE id = ?');
     define ('SELECT_GIFTCARD_BY_CARDNO', 'SELECT * FROM giftcards WHERE card_number = ?');
     define ('IS_GIFTCARD_SOLD', 'SELECT * FROM seller_giftcards WHERE status = "active" AND id = ?');
     define ('UPDATE_GIFTCARD_TO_SOLD', 'UPDATE giftcards SET price = price + ?, qty_sold = qty_sold + 1 WHERE seller_id = ?');
 
     define ('SELECT_ALL_GIFTCARDS_BY_STAFFID', 'SELECT * from giftcards WHERE staff_id = ?');
-    define ('INSERT_STAFF_GIFTCARD', 'INSERT INTO giftcards (staff_id, seller_id, title, description, price, qty, color, card_number, expiry_date) VALUES (?,?,?,?,?,?,?,?,?)');
+    define ('INSERT_STAFF_GIFTCARD', 'INSERT INTO giftcards (staff_id, seller_id, title, description, price, qty, status, color, card_number, expiry_date) VALUES (?,?,?,?,?,?,?,?,?,?)');
     define ('SELECT_SELLER', 'SELECT * FROM seller WHERE id = ?');
     define ('UPDATE_GITFTCARD_ASSIGNEE', 'UPDATE giftcards SET seller_id = ? WHERE id = ?');
     define ('SELECT_GIRDCARD_BY_CARDNO', 'SELECT card_number FROM giftcards WHERE card_number = ?');
+    define ('SELECT_MAIN_GIRDCARD_BY_CARDNO', 'SELECT * FROM giftcards WHERE seller_id = ? AND card_number = ?');
+    define ('UPDATE_MAIN_GITFTCARD_STATUS', 'UPDATE giftcards SET status = ? WHERE card_number = ?');
+
+    define ('INSERT_SELLER_GIFTCARD', 'INSERT INTO seller_giftcards (card_id, seller_id, title, description, price, status, expiry_date) VALUES (?,?,?,?,?,?,?)');
+    define ('SELECT_SELLER_GIFTCARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ?');
+    define ('CHECK_IF_GIFTCARD_NUMBER_EXISTS', 'SELECT id FROM seller_giftcards WHERE card_id = ? AND card_number = ? AND seller_id = ?');
+    define ('UPDATE_GIFTCARD_CARDNO', 'UPDATE seller_giftcards SET card_number = ? WHERE id = ? AND seller_id = ?');
+    define ('REDEEM_CARD', 'UPDATE seller_giftcards SET status = "redeemed" WHERE id = ? AND seller_id = ?');
+    define ('UPDATE_GITFTCARD_STATUS', 'UPDATE seller_giftcards SET status = ? WHERE card_id = ? AND seller_id = ?');
 
     define ('INSERT_NOTIFICATION', 'INSERT INTO notifications (user_id, title, text, profile_img) VALUES (?,?,?,?)');
-    define ('SELECT_NOTIFICATIONS', 'SELECT * FROM notifications WHERE user_id = ?');
+    define ('SELECT_NOTIFICATIONS', 'SELECT * FROM notifications WHERE user_id = ? order by created desc limit 10');
     define ('DELETE_NOTIFICATION', 'DELETE FROM notifications WHERE user_id = ?'); 
 
     define ('DELETE_STAFF', 'DELETE FROM staff WHERE id = ?'); 
     define ('DELETE_SELLER', 'DELETE FROM seller WHERE id = ?');
-    define ('DELETE_GIFTCARD', 'DELETE FROM giftcards WHERE id = ?');
+    define ('DELETE_GIFTCARD', 'DELETE FROM giftcards WHERE card_number = ?');
+    define ('DELETE_SELLER_GIFTCARDS', 'DELETE FROM seller_giftcards WHERE card_id = ?');
 
 ?>

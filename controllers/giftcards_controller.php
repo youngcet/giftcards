@@ -69,10 +69,20 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$staff_id, $userid, $title, $description, $price, $qty, $color, $cardno, $expiry_date], 'iisssisss');
+			$sql = $this->db_handler->executeStatement ([$staff_id, $userid, $title, $description, $price, $qty, App\Constants::FREEZE, $color, $cardno, $expiry_date], 'iisssissss');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;
+			}
+
+			// generate individual cards
+			for ($i = 0; $i < $qty; $i++)
+			{
+				$sql = $this->InsertSellerGiftCards ($cardno, $userid, $title, $description, $price, 'active', $expiry_date);
+				if (App\Custom\Error::IsAnError ($sql))
+				{
+					return $sql;
+				}
 			}
 			
 			return 1;
@@ -146,6 +156,63 @@
 			return 1;
 		}
 
+		public function UpdateMainCardStatus ($status, $cardnumber, $sellerid)
+		{
+			// $sql = $this->UpdateCardStatus ($status, $cardnumber, $sellerid);
+			// if (App\Custom\Error::IsAnError ($sql))
+			// {
+			// 	return $sql;
+			// }
+
+			$sql = $this->db_handler->prepareStatement (UPDATE_MAIN_GITFTCARD_STATUS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$status, $cardnumber], 'ss');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function UpdateCardStatus ($status, $cardnumber, $sellerid)
+		{
+			$sql = $this->db_handler->prepareStatement (UPDATE_GITFTCARD_STATUS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$status, $cardnumber, $sellerid], 'ssi');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function InsertSellerGiftCards ($card_id, $seller_id, $title, $description, $price, $status, $expiry_date)
+		{
+			$sql = $this->db_handler->prepareStatement (INSERT_SELLER_GIFTCARD);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$card_id, $seller_id, $title, $description, $price, $status, $expiry_date], 'sisssss');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
 		public function SelectGiftCard ($id)
 		{
 			$sql = $this->db_handler->prepareStatement (SELECT_GIFTCARD);
@@ -171,7 +238,19 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$cardid], 'i');
+			$sql = $this->db_handler->executeStatement ([$cardid], 's');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->prepareStatement (DELETE_SELLER_GIFTCARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardid], 's');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;
