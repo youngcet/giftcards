@@ -116,7 +116,7 @@
                                 <li>
                                     <div class="message-center notifications position-relative ps-container ps-theme-default" data-ps-id="e2c71344-31b5-84c6-a0eb-7799fb9d0997">
                                     
-                                        <a href="javascript:void(0)" class="message-item d-flex align-items-center border-bottom px-3 py-2">
+                                        <a href="?notification={notification.info}" class="message-item d-flex align-items-center border-bottom px-3 py-2">
                                             <div class=""><img src="{notification.profileimg}" alt="user" class="rounded-img" width="40"></div>
                                             <div class="w-75 d-inline-block v-middle pl-2">
                                                 <h6 class="message-title mb-0 mt-1">{notification.title}</h6>
@@ -491,6 +491,33 @@
                 }
               </script>
             <div class="container-fluid">
+
+                <!--php-code 
+                    if ('{show.user.notification}')
+                    {
+                        return '<div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Notification Details</h4>
+                                        <p class="text-muted font-14 mb-3">
+                                            Date: {user.notification.date}
+                                        </p>
+
+                                        <div class="alert alert-success" role="alert">
+                                            <h4 class="alert-heading">{user.notification.title}</h4>
+                                            <p>{user.notification.text}</p>
+                                            <hr>
+                                            <p class="mb-0"><i class="fas fa-check" id="acceptrequest"></i> <a href="javascript:acceptRequest()" id="acceptrequestanchor"> Accept </a> | <i class="fas fa-times"></i> Decline</p>
+                                        </div>
+
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>';
+                    }
+                endcode-->
+
                 <!--php-code
                     if ('{deleteuser}')
                     {
@@ -859,6 +886,16 @@
             if (confirm ('Are you sure you want to delete this user?') == true) {
                 window.location.href = "?del="+document.getElementById(elm).attr('id');
             }
+        }
+
+        function acceptRequest(){
+            $('#acceptrequest').removeClass('fas fa-check');
+            $('#acceptrequest').addClass('fas fa-spinner fa-spin');
+            $('#acceptrequestanchor').attr("disabled","disabled");
+
+            setTimeout(function() {
+                window.location.href = window.location.href + '&acceptreq';
+            }, 300);
         }
     </script>
 </body>

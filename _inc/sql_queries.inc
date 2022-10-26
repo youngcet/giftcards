@@ -56,14 +56,22 @@
 
     define ('INSERT_SELLER_GIFTCARD', 'INSERT INTO seller_giftcards (card_id, seller_id, title, description, price, status, expiry_date) VALUES (?,?,?,?,?,?,?)');
     define ('SELECT_SELLER_GIFTCARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ?');
+    define ('SELECT_NON_REDEEMED_CARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ? AND status = "active"');
     define ('CHECK_IF_GIFTCARD_NUMBER_EXISTS', 'SELECT id FROM seller_giftcards WHERE card_id = ? AND card_number = ? AND seller_id = ?');
     define ('UPDATE_GIFTCARD_CARDNO', 'UPDATE seller_giftcards SET card_number = ? WHERE id = ? AND seller_id = ?');
     define ('REDEEM_CARD', 'UPDATE seller_giftcards SET status = "redeemed" WHERE id = ? AND seller_id = ?');
     define ('UPDATE_GITFTCARD_STATUS', 'UPDATE seller_giftcards SET status = ? WHERE card_id = ? AND seller_id = ?');
 
     define ('INSERT_NOTIFICATION', 'INSERT INTO notifications (user_id, title, text, profile_img) VALUES (?,?,?,?)');
-    define ('SELECT_NOTIFICATIONS', 'SELECT * FROM notifications WHERE user_id = ? order by created desc limit 10');
+    define ('INSERT_REQUEST_NOTIFICATION', 'INSERT INTO notifications (user_id, title, text, email, card_number, profile_img) VALUES (?,?,?,?,?,?)');
+    define ('SELECT_NOTIFICATIONS', 'SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 order by created desc limit 10');
+    define ('SELECT_NOTIFICATIONS_BY_ID', 'SELECT * FROM notifications WHERE id = ?');
+    define ('SELECT_READ_NOTIFICATIONS', 'SELECT * FROM notifications WHERE user_id = ? AND is_read = 1 order by created desc limit 10');
     define ('DELETE_NOTIFICATION', 'DELETE FROM notifications WHERE user_id = ?'); 
+    define ('MARK_AS_READ', 'UPDATE notifications SET is_read = 1 WHERE id = ?');
+    define ('MARK_All_AS_READ', 'UPDATE notifications SET is_read = 1 WHERE user_id = ?');
+
+    define ('INSERT_REQUEST', 'INSERT INTO guestrequests (seller_id, card_number, guestname, email, data) VALUES (?,?,?,?,?)');
 
     define ('DELETE_STAFF', 'DELETE FROM staff WHERE id = ?'); 
     define ('DELETE_SELLER', 'DELETE FROM seller WHERE id = ?');

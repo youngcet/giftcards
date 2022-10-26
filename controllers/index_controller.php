@@ -237,6 +237,23 @@
 			return $record;
 		}
 
+		public function SelectSellerGiftCard ($cardid, $id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_NON_REDEEMED_CARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardid, $id], 'si');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchRow();
+		}
+
 		public function GetTotalSellerGiftCards ($id)
 		{
 			$sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_GIFTCARDS_TOTAL);
@@ -434,6 +451,63 @@
 			}
 			
 			return $this->db_handler->fetchAll();
+		}
+
+		public function RedeemQuestRequestCard ($qty_sold, $qty, $maincardnumber, $cardid, $userid)
+		{
+			$sql = $this->db_handler->prepareStatement (REDEEM_CARD);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardid, $userid], 'ii');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+            $sql = $this->RedeemMainCard ($qty_sold, $qty, $maincardnumber, $userid);
+            if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function RedeemMainCard ($qty_sold, $qty, $cardnumber, $userid)
+		{
+			$sql = $this->db_handler->prepareStatement (REDEEM_MAIN_GIFTCARD);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$qty_sold, $qty, $cardnumber, $userid], 'iisi');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function InsertGuestUserRequest ($seller_id, $card_number, $guestname, $email, $data)
+		{
+			$sql = $this->db_handler->prepareStatement (INSERT_REQUEST);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$seller_id, $card_number, $guestname, $email, $data], 'issss');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
 		}
 
 		public function DeleteUser ($type, $id)

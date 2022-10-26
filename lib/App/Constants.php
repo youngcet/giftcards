@@ -44,6 +44,8 @@
         const LOGIN_FAILED_MSG = 'Email or Password Incorrect!';
         const GIFTCARDS_EXCEEDED = 'Quantity to Redeem is greater than available Gift Cards!';
 
+        // urls
+        const GUEST_DIGITAL_GIFTCARD_URI = 'guest/view/';
 
         // status codes
         const REQUEST_OK = '200';

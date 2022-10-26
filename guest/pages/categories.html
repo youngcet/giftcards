@@ -33,12 +33,14 @@
                         <div class="hero-form newsletter-form field field-grouped is-revealing">
                             <div class="control control-expanded">
                                 <form action="" method="get">
-                                    <input type="hidden" name="price" value="{card.price}">
                                     <input type="hidden" name="#" value="giftcard">
+                                    <input class="input" type="hidden" name="id" value="{seller.id}">
+                                    <input class="input" type="hidden" name="n" value="{guest.name}">
+                                    <input class="input" type="hidden" name="e" value="{guest.email}">
                                     <select class="input" name="category" onchange="this.form.submit()">
                                         <option selected>Choose...</option>
                                         <%=for("cards")
-                                        <option value="{card.title}">{card.title}</option>
+                                        <option value="{card.number}">{card.title}</option>
                                         =%>
                                     </select>
                                 </form>
@@ -49,7 +51,10 @@
                     </div>
                 </div>
             </section>
-            <div class="hero-browser">
+            <!--php-code 
+                if ('{enable.giftcard}')
+                {
+                    return '<div class="hero-browser" id="giftcard">
                 <div class="bubble-3 is-revealing" style="visibility: visible;">
                     <svg width="427" height="286" viewBox="0 0 427 286" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <defs>
@@ -81,8 +86,8 @@
                     </svg>
                 </div>
                 <div class="hero-browser-inner is-revealing" style="visibility: visible;text-align: center;">
-                    <h2 class="section-title mt-0">Stay in the know</h2>
-                    <iframe src="pages/request.html" style="height:500px;width:600px;border:none"></iframe>
+                    <h2 class="section-title mt-0">My Gift Card</h2>
+                    <iframe src="giftcard.php?group={card.number}&id={seller.id}&n={guest.name}&e={guest.email}" style="height:500px;width:600px;border:none"></iframe>
                 </div>
                 <div class="bubble-1 is-revealing" style="visibility: visible;">
                     <svg width="61" height="52" viewBox="0 0 61 52" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -114,14 +119,15 @@
                         </g>
                     </svg>
                 </div>
-            </div>
-
+            </div>';
+                }
+            endcode-->
             <section class="newsletter section">
                 <div class="container-sm">
                     <div class="newsletter-inner section-inner">
                         <div class="newsletter-header text-center is-revealing">
                             </div>
-                        
+                            <a class="button button-primary button-block button-shadow" href="?id={seller.id}&p=categories#giftcard">Request another gift card</a>
                     </div>
                 </div>
             </section>

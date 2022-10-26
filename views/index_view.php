@@ -1,9 +1,6 @@
 <?php
 
 	require ('session.php');
-// 	ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
 
 	class IndexView
 	{
@@ -16,7 +13,7 @@
 			$this->controller = $controller;
 			$this->model = $model;
 			
-			$data = array ('{app.title}' => 'Gift Cards', '{user.name}' => 'Yung');
+			$data = array ('{app.title}' => 'Gift Cards');
 			$data['{user.fname}'] = $_SESSION['fname'];
 			$data['{user.lname}'] = $_SESSION['lname'];
 			$data['{user.email}'] = $_SESSION['useremail'];
@@ -42,6 +39,7 @@
 			$showdeletepopup = true;
 			$data['{notification.count}'] = 0;
 			$data['{hide.makeallasread}'] = 'none';
+			$data['{show.user.notification}'] = false;
 			
 			$data['{greeting.message}']  = (App\Custom\Utils::GetCurrentHour() > 12) ? App\Constants::GOOD_AFTERNOON_MESSAGE : App\Constants::GOOD_MORNING_MESSAGE;
 
@@ -57,7 +55,37 @@
 
 			if (isset ($_POST['seen']))
 			{
-				$this->controller->DeleteNotification ($_SESSION['userid']);
+				//$this->controller->DeleteNotification ($_SESSION['userid']);
+				App\Notification::MarkAllAsRead (new DatabaseHandler(), $_SESSION['userid']);
+				header ('Location: index');
+				die;
+			}
+
+			if (isset ($_GET['acceptreq']))
+			{
+				$notificationinfo = json_decode (base64_decode ($_GET['notification']));
+				if (! empty ($notificationinfo))
+				{
+					$requestdetails = App\Notification::GetRow (new DatabaseHandler(), $notificationinfo->id);
+
+					$card_number = $requestdetails['card_number'];
+					$email = $requestdetails['email'];
+					$name = $requestdetails['title'];
+					$sellerid = $requestdetails['user_id'];
+					
+					$cardinfo = $this->controller->SelectSellerGiftCard ($card_number, $sellerid);
+					$cardid = $cardinfo['card_number'];
+
+					$data = base64_encode (json_encode ($cardinfo));
+					$insert = $this->controller->InsertGuestUserRequest ($sellerid, $card_number, $name, $email, $data);
+					$redeem = $this->controller->RedeemQuestRequestCard (1, 1, $card_number, $cardid, $sellerid);
+
+					if (! App\Custom\Error::IsAnError ($insert) || ! App\Custom\Error::IsAnError ($redeem) || ! App\Custom\Error::IsAnError ($cardinfo))
+					{
+						header ('Location: index?success');
+						die;
+					}
+				}
 			}
 
 			if (isset ($_POST['deleteuser']))
@@ -352,10 +380,6 @@
 				$notifications = $this->controller->SelectNotifications ($_SESSION['userid']);
 				foreach ($notifications as $notification)
 				{
-					// $datetime = explode (' ', $notification['created']);
-					// $createdtime = explode (' ', $datetime[1]);
-					// $time = $createdtime[0].':'.$createdtime[1];
-
 					$data['notifications'][] = array
 						(
 							'{notification.profileimg}' => $notification['profile_img'],
@@ -363,6 +387,12 @@
 							'{notification.id}' => $notification['id'],
 							'{notification.text}' => $notification['text'],
 							'{notification.time}' => $notification['created'],
+							'{notification.info}' => base64_encode (json_encode ([
+								'id' => $notification['id'],
+								'title' => $notification['title'],
+								'text' => $notification['text'],
+								'date' => $notification['created'],
+							]))
 						);
 				}
 
@@ -410,7 +440,22 @@
 			$data['{admin.users}'] = $this->model->getSubstString ($userrole, $data);
 			$data['{staff.users}'] = $this->model->getSubstString ($userrole, $data);
 
-			$htmlparser = new App\Custom\HTMLParser (file_get_contents (App\Constants::HTML_PAGES_DIR.'index.html'), $data);
+			$page = 'index.html';
+
+			if (isset ($_GET['notification'])) 
+			{
+				$data['{show.user.notification}'] = true;
+				$notificationinfo = json_decode (base64_decode ($_GET['notification']));
+				
+				$data['{user.notification.title}'] = $notificationinfo->title;
+				$data['{user.notification.text}'] = $notificationinfo->text;
+				$data['{user.notification.id}'] = $notificationinfo->id;
+				$data['{user.notification.date}'] = $notificationinfo->date;
+				
+				App\Notification::MarkAsRead (new DatabaseHandler(), $notificationinfo->id);
+			}
+
+			$htmlparser = new App\Custom\HTMLParser (file_get_contents (App\Constants::HTML_PAGES_DIR.$page), $data);
 			$htmlstring = $htmlparser->GetSubstitutedString(); // get the parsed html string
 			// check for errors
 			if (App\Custom\Error::IsAnError ($htmlstring))

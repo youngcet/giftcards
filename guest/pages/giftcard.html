@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="UTF-8">
-
+    <title>My Gift Card</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -598,19 +598,6 @@
         }
     </style>
 
-    <script>
-        window.console = window.console || function (t) {};
-    </script>
-
-
-
-    <script>
-        if (document.location.search.match(/type=embed/gi)) {
-            window.parent.postMessage("resize", "*");
-        }
-    </script>
-
-
 </head>
 
 <body translate="no">
@@ -621,8 +608,9 @@
         </section>
         <div class="giftcard-content">
             <h2>{card.title}</h2>
+            Card No: {card.number}<br/>
             ${card.price}
-            <div class="subtext">{card.description}<br/><br/>exp. {card.expirydate}<br/><br/><i class="fa fa-check" aria-hidden="true" style="color: green;"></i> request sent! <br/><i class="fa fa-spinner fa-spin" aria-hidden="true" style="color: green;"></i> waiting for seller's response</div>
+            <div class="subtext">{card.description}<br/><br/>exp. {card.expirydate}</div>
         </div>
         <footer class="giftcard-footer">
             <div class="giftcard-text">
@@ -631,7 +619,7 @@
             </div>
             <div class="ribbon">
                 <div class="giftwrap">
-                    <a href="javascript:request()" class="button">Request</a>
+                    <a href="#request" class="button">Info</a>
                 </div>
                 <div class="bow">
                     <i class="fa fa-bookmark"></i>
@@ -640,20 +628,14 @@
             </div>
             <div class="giftcard-info">
                 <div>
-                    <small>You will receive an email once the seller has responded.</small>
+                    <small></small>
                 </div>
                 <div>
-                    
+                    <a href="#" class="button">&lt;&lt;</a>
                 </div>
             </div>
         </footer>
     </section>
-<script>
-    function request()
-    {
-        window.location.href = window.location.href + '&req={card.title}#request';
-    }
-</script>
 </body>
 
 </html>

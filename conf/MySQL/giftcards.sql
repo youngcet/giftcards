@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2022 at 02:20 AM
+-- Generation Time: Oct 27, 2022 at 12:01 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -78,6 +78,23 @@ INSERT INTO `giftcards` (`id`, `seller_id`, `staff_id`, `admin_id`, `title`, `de
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `guestrequests`
+--
+
+CREATE TABLE `guestrequests` (
+  `id` int(11) NOT NULL,
+  `seller_id` int(11) NOT NULL,
+  `card_number` varchar(20) NOT NULL,
+  `guestname` varchar(70) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `data` longblob NOT NULL,
+  `status` varchar(10) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `notifications`
 --
 
@@ -86,6 +103,8 @@ CREATE TABLE `notifications` (
   `user_id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `text` varchar(200) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `card_number` varchar(20) NOT NULL,
   `is_read` int(11) NOT NULL DEFAULT 0,
   `profile_img` varchar(500) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -95,9 +114,8 @@ CREATE TABLE `notifications` (
 -- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `user_id`, `title`, `text`, `is_read`, `profile_img`, `created`) VALUES
-(25, 10, 'Staff User', 'Freezed Google gift card', 0, 'src/assets/images/users/8_staff_Bane_TDKR3.jpg', '2022-10-25 23:10:46'),
-(26, 10, 'Staff User', 'Unfreezed Google gift card', 0, 'src/assets/images/users/8_staff_Bane_TDKR3.jpg', '2022-10-25 23:25:44');
+INSERT INTO `notifications` (`id`, `user_id`, `title`, `text`, `email`, `card_number`, `is_read`, `profile_img`, `created`) VALUES
+(31, 10, 'Cedric Maenetja', 'Requested Google gift card', 'young.cet@gmail.com', '3140-9976-4832-0846', 1, 'src/assets/images/users/user.png', '2022-10-26 23:04:07');
 
 -- --------------------------------------------------------
 
@@ -513,6 +531,15 @@ ALTER TABLE `giftcards`
   ADD KEY `card_number` (`card_number`);
 
 --
+-- Indexes for table `guestrequests`
+--
+ALTER TABLE `guestrequests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `seller_id` (`seller_id`),
+  ADD KEY `card_number` (`card_number`),
+  ADD KEY `id` (`id`);
+
+--
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
@@ -565,10 +592,16 @@ ALTER TABLE `giftcards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
+-- AUTO_INCREMENT for table `guestrequests`
+--
+ALTER TABLE `guestrequests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `seller`
