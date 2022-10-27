@@ -54,7 +54,7 @@
     define ('SELECT_MAIN_GIRDCARD_BY_CARDNO', 'SELECT * FROM giftcards WHERE seller_id = ? AND card_number = ?');
     define ('UPDATE_MAIN_GITFTCARD_STATUS', 'UPDATE giftcards SET status = ? WHERE card_number = ?');
 
-    define ('INSERT_SELLER_GIFTCARD', 'INSERT INTO seller_giftcards (card_id, seller_id, title, description, price, status, expiry_date) VALUES (?,?,?,?,?,?,?)');
+    define ('INSERT_SELLER_GIFTCARD', 'INSERT INTO seller_giftcards (card_id, seller_id, card_number, title, description, price, status, expiry_date) VALUES (?,?,?,?,?,?,?,?)');
     define ('SELECT_SELLER_GIFTCARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ?');
     define ('SELECT_NON_REDEEMED_CARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ? AND status = "active"');
     define ('CHECK_IF_GIFTCARD_NUMBER_EXISTS', 'SELECT id FROM seller_giftcards WHERE card_id = ? AND card_number = ? AND seller_id = ?');
@@ -72,6 +72,7 @@
     define ('MARK_All_AS_READ', 'UPDATE notifications SET is_read = 1 WHERE user_id = ?');
 
     define ('INSERT_REQUEST', 'INSERT INTO guestrequests (seller_id, card_number, guestname, email, data) VALUES (?,?,?,?,?)');
+    define ('SELECT_GUEST_CARDS', 'SELECT * FROM guestrequests WHERE seller_id = ?');
 
     define ('DELETE_STAFF', 'DELETE FROM staff WHERE id = ?'); 
     define ('DELETE_SELLER', 'DELETE FROM seller WHERE id = ?');

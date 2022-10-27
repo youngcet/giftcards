@@ -24,7 +24,7 @@
             $data['{notification.count}'] = 0;
             $data['{profile_img}'] = $_SESSION['profile_img'];
 
-            $data['maincards'] = $data['redeemedcards'] = $data['cards'] = array();
+            $data['maincards'] = $data['guestcards'] = $data['redeemedcards'] = $data['cards'] = array();
 
             $userrole = $_SESSION['role'];
             $data['{user.role}'] = $userrole;
@@ -55,7 +55,8 @@
                 die;
             }
 
-            $data['{show.redeemed'] = (isset ($_GET[App\Constants::REDEEMED])) ? true : false;
+            $data['{show.redeemed}'] = (isset ($_GET[App\Constants::REDEEMED])) ? true : false;
+            $data['{show.guests}'] = (isset ($_GET[App\Constants::GUESTS])) ? true : false;
                 
             $cardno = trim (strip_tags ($_GET['group']));
 
@@ -172,6 +173,26 @@
                             '{card.title}' => $maincard['title'],
                             '{card.number}' => $maincard['card_number'],
                             '{card.selected}' => $isselected
+                        );
+                }
+            }
+
+            if ($data['{show.guests}'])
+            {
+                $guestscards = $this->controller->GuestGiftCards ($_SESSION['userid']);
+                foreach ($guestscards as $guest)
+                {
+                    $card = json_decode (base64_decode ($guest['data']));
+                    $data['guestcards'][] = array
+                        (
+                            '{guest.name}' => $guest['guestname'],
+                            '{card.price}' => $card->price,
+                            '{card.description}' => $card->description,
+                            '{card.title}' => $card->title,
+                            '{guest.email}' => $guest['email'],
+                            '{card.created}'=> $guest['created'],
+                            '{card.number}' => $card->card_number,
+                            '{card.expirydate}' => $card->expiry_date
                         );
                 }
             }

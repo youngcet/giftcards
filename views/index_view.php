@@ -45,6 +45,8 @@
 
 			$userinfo = $this->controller->SelectUserInfo ($userrole, $_SESSION['userid']);
 			$_SESSION['profile_img'] = ($userinfo['profile_img'] == '') ? App\Constants::DEFAULT_USER_PROFILE_IMG: $userinfo['profile_img'];
+			$data['{user.account_number}'] = $userinfo['id'];
+			if (! isset ($_SESSION['{user.account_number}'])) $_SESSION['{user.account_number}'] = $userinfo['id'];
 
 			if (isset ($_GET['logout']))
 			{
@@ -57,6 +59,12 @@
 			{
 				//$this->controller->DeleteNotification ($_SESSION['userid']);
 				App\Notification::MarkAllAsRead (new DatabaseHandler(), $_SESSION['userid']);
+				header ('Location: index');
+				die;
+			}
+
+			if (isset ($_GET['declinereq']))
+			{
 				header ('Location: index');
 				die;
 			}
@@ -82,7 +90,7 @@
 
 					if (! App\Custom\Error::IsAnError ($insert) || ! App\Custom\Error::IsAnError ($redeem) || ! App\Custom\Error::IsAnError ($cardinfo))
 					{
-						header ('Location: index?success');
+						header ('Location: index?req='.$data);
 						die;
 					}
 				}
@@ -398,6 +406,25 @@
 
 				$data['{notification.count}'] = count ($notifications);
 				if ($data['{notification.count}']) $data['{hide.makeallasread}'] = 'block';
+
+				// add seen notifications
+				foreach (App\Notification::Get (new DatabaseHandler(), 'read', $_SESSION['userid']) as $notification)
+				{
+					$data['notifications'][] = array
+						(
+							'{notification.profileimg}' => $notification['profile_img'],
+							'{notification.title}' => $notification['title'],
+							'{notification.id}' => $notification['id'],
+							'{notification.text}' => $notification['text'],
+							'{notification.time}' => $notification['created'],
+							'{notification.info}' => base64_encode (json_encode ([
+								'id' => $notification['id'],
+								'title' => $notification['title'],
+								'text' => $notification['text'],
+								'date' => $notification['created'],
+							]))
+						);
+				}
 
 				$giftcards = $this->controller->GetGiftCards ($_SESSION['userid']);
 				$createdgiftcards = $this->controller->GetCreatedGiftCards ($_SESSION['userid']);

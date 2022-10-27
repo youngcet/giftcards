@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="src/assets/images/favicon.png">
-    <title>GiftAdmin - {group.card.title}</title>
+    <title>GiftAdmin - Guests Gift Cards</title>
     <!-- Custom CSS -->
     <link href="src/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="src/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
@@ -313,7 +313,7 @@
                                     <input class="form-control" type="email" id="emailaddress"
                                         required="" value="{user.email}" name="email" disabled>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="password">Change Password</label>
                                     <input class="form-control" type="password" minlength="6"
@@ -368,13 +368,13 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-7 align-self-center">
-                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">{group.card.title}</h3>
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Guests</h3>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
                                     <li class="breadcrumb-item"><a href="index">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item text-muted active" aria-current="page">{group.card.title} Gift Cards</li>
+                                    <li class="breadcrumb-item text-muted active" aria-current="page">Guests Requested Gift Card</li>
                                 </ol>
                             </nav>
                         </div>
@@ -405,20 +405,9 @@
                         <div class="card">
                             <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-8">
                                             <div class="grid-container">
-                                                <h4 class="card-title" style="padding: 5px"><i class="fas fa-gift"></i> Gift Card:</h4>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2" style="margin-left: -80px;">
-                                            <div class="grid-container">
-                                                <form method="get" action="">
-                                                    <select name="group" class="custom-select mr-sm-2" onchange="this.form.submit()">
-                                                        <%=for("maincards")
-                                                        <option value="{card.number}" {card.selected}>{card.title}</option>
-                                                        =%>
-                                                    </select>
-                                                </form>
+                                                <h4 class="card-title" style="padding: 5px"><i class="fas fa-gift"></i> Guests Gift Cards</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -428,30 +417,26 @@
                                             <thead>
                                                 <tr class="border-0">
                                                     <th class="border-0 font-14 font-weight-medium text-muted"></th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Card No. <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="dashes are optional, can also be alphanumeric"></i></th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Guest</th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Card No. <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="dashes are optional, can also be alphanumeric"></i></th>
                                                     <th class="border-0 font-14 font-weight-medium text-muted">Description</th>
-                                                    <th class="border-0 font-14 font-weight-medium text-muted">Action</th>
-                                                        <th class="border-0 font-14 font-weight-medium text-muted">Expiring On</th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Accepted On</th>
+                                                    <th class="border-0 font-14 font-weight-medium text-muted">Expiry Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <%=list dataset="cards"
+                                                <%=list dataset="guestcards"
                                                     <tr>
                                                         <td class="border-top-0 px-2 py-4">
                                                             <h5 class="text-dark mb-0 font-16 font-weight-medium"> {card.title}</h5>
                                                             <span class="text-muted font-14">${card.price}</span><br/>
                                                         </td>
+                                                        <td class="border-top-0 text-muted px-2 py-4 font-14">{guest.name}<br/>{guest.email}</td>
                                                         <td class="border-top-0 text-muted px-2 py-4 font-14">
-                                                            <form action="" method="post">
-                                                                <div class="form-group">
-                                                                    <input type="hidden" value="{card.id}" name="id">
-                                                                    <input required placeholder="1234-5678-9101-1123" type="text" class="form-control" value="{card.number}" name="card_number" maxlength="19" minlength="10">
-                                                                    <input type="submit" name="updatecardnumber" value="update" style="border: none;background:transparent;color: #5f76e8;">
-                                                                </div>
-                                                            </form>
+                                                            <input disabled required placeholder="1234-5678-9101-1123" title="{card.number}" type="text" class="form-control" value="{card.number}" name="card_number" maxlength="19" minlength="10">  
                                                         </td>
                                                         <td class="border-top-0 text-muted px-2 py-4 font-14">{card.description}</td>
-                                                        <td class="font-weight-medium text-dark border-top-0 px-2 py-4"><!--php-code return ('{iscardactive}') ? '<form action="" method="post"><input type="hidden" value="{card.number}" name="cardno"><input type="hidden" value="{card.id}" name="id"><input type="submit" name="redeemcard" value="redeem" title="click to redeem gift card" style="border: none;background:transparent;color: #5f76e8;"></form>' : 'Redeemed';endcode--></td>
+                                                        <td class="border-top-0 text-muted px-2 py-4 font-14">{card.created}</td>
                                                         <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{card.expirydate}</td>
                                                     </tr>
                                                 =%>
@@ -513,22 +498,6 @@
     <script src="src/dist/js/pages/dashboards/dashboard1.min.js"></script>
     <script src="src/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="src/dist/js/pages/datatable/datatable-basic.init.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#seller_giftcards').DataTable( {
-                columnDefs: [ {
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets:   0
-                } ],
-                select: {
-                    style:    'os',
-                    selector: 'td:first-child'
-                },
-                order: [[ 1, 'asc' ]]
-            } );
-        } );
-    </script>
 </body>
 
 </html>

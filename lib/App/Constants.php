@@ -10,6 +10,7 @@
         const SELLER = 'seller';
         const ACTIVE = 'active';
         const SUCCESS = 'success';
+        const GUESTS = 'guests';
         const GIFTCARD = 'Gift Card';
         const NOT_APPLICABLE = 'N/A';
         const REDEEMED = 'redeemed';

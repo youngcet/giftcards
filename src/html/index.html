@@ -264,6 +264,7 @@
                                     =%>
                                 </ul>
                             </li>
+                            <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="list?group={group.card.number}&guests" aria-expanded="false"><i class="fas fa-user-secret"></i> Guest Gift Cards</a></li>
                                 ';
                             }
                         endcode-->
@@ -368,7 +369,16 @@
                                     <label for="emailaddress">Email address</label>
                                     <input class="form-control" type="email" id="emailaddress"
                                         required="" value="{user.email}" name="email" disabled>
-                                </div>
+                                </div> 
+                                <!--php-code 
+                                    if ('{user.role}' === 'seller')
+                                    {
+                                        return '<div class="form-group">
+                                            <label for="emailaddress">Seller ID</label>
+                                            <input class="form-control" type="text" id="sellerid" value="{user.account_number}" name="sellerid" disabled>
+                                        </div>';
+                                    }
+                                endcode-->
 
                                 <div class="form-group">
                                     <label for="password">Change Password</label>
@@ -508,7 +518,7 @@
                                             <h4 class="alert-heading">{user.notification.title}</h4>
                                             <p>{user.notification.text}</p>
                                             <hr>
-                                            <p class="mb-0"><i class="fas fa-check" id="acceptrequest"></i> <a href="javascript:acceptRequest()" id="acceptrequestanchor"> Accept </a> | <i class="fas fa-times"></i> Decline</p>
+                                            <p class="mb-0"><i class="fas fa-check" id="acceptrequest"></i> <a href="javascript:acceptRequest()" id="acceptrequestanchor"> Accept </a> | <i class="fas fa-times" id="declinerequest"></i> <a href="javascript:declineRequest()" style="color:red" id="declinerequestanchor"> Decline</a></p>
                                         </div>
 
                                     </div> 
@@ -895,6 +905,16 @@
 
             setTimeout(function() {
                 window.location.href = window.location.href + '&acceptreq';
+            }, 300);
+        }
+
+        function declineRequest(){
+            $('#declinerequest').removeClass('fas fa-times');
+            $('#declinerequest').addClass('fas fa-spinner fa-spin');
+            $('#declinerequestanchor').attr("disabled","disabled");
+
+            setTimeout(function() {
+                window.location.href = 'index';
             }, 300);
         }
     </script>

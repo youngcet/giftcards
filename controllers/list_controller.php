@@ -47,6 +47,25 @@
 			return $record;
 		}
 
+		public function GuestGiftCards ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_GUEST_CARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$record = $this->db_handler->fetchAll();
+
+			return $record;
+		}
+
         public function SelectGiftCards ($cardid, $id)
 		{
 			$sql = $this->db_handler->prepareStatement (SELECT_SELLER_GIFTCARDS);
