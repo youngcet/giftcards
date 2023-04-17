@@ -4,7 +4,7 @@
 
     interface Role 
     {
-        public function AddUserModal();
+        public function getUsersHTMLFile();
         //public function RightMenu();
     }
 ?>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="src/assets/images/favicon.png">
+    <title>GiftAdmin - GiftCards</title>
+    <!-- Custom CSS -->
+    <link href="src/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="src/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Custom CSS -->
+    <link href="src/dist/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <style>
+        .col-md-4 {
+            border-radius: 0.7em;
+            transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+            transition-property: background, transform, color, opacity;
+        }
+        .giftcard_buttons > small {
+            margin-left: 0px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-md">
+                <div class="navbar-header" data-logobg="skin6">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="navbar-brand">
+                        <!-- Logo icon -->
+                        <a href="/">
+                            <b class="logo-icon">
+                                <!-- Dark Logo icon -->
+                                <img src="src/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                                <!-- Light Logo icon -->
+                                <img src="src/assets/images/logo-icon.png" alt="homepage" class="light-logo" />
+                            </b>
+                            <!--End Logo icon -->
+                            <!-- Logo text -->
+                            <span class="logo-text" style="font-size: 25px;">
+                                <!-- dark Logo text -->
+                                Gift<font style="font-weight: bold;">Admin</font>
+                            </span>
+                        </a>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
+                        data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+                        <!-- Notification -->
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-success text-white rounded-circle btn-circle font-20" data-toggle="modal" data-target="#{modal.details}">+</button>
+                            <span class="ml-2 d-none d-lg-inline-block"><span class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">Create {user.modal.title}</span></span>
+                        </li>
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-right">
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item d-none d-md-block">
+                            <a class="nav-link" href="javascript:void(0)">
+                                <form>
+                                    <div class="customize-input">
+                                        <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                            type="search" placeholder="Search" aria-label="Search">
+                                        <i class="form-control-icon" data-feather="search"></i>
+                                    </div>
+                                </form>
+                            </a>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <img src="{profile_img}" alt="user" class="rounded-img"
+                                    width="40">
+                                <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
+                                        class="text-dark">{user.fname} {user.lname}</span> <i data-feather="chevron-down"
+                                        class="svg-icon"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                                <a class="dropdown-item" data-toggle="modal" data-target="#myprofile-modal" style="cursor: pointer;"><i data-feather="user"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    My Profile</a>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <!--php-code 
+                            if ('{user.role}' === 'admin') 
+                            {
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
+                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                    class="hide-menu">Dashboard</span></a></li>
+                                <li class="list-divider"></li>
+                                <li class="nav-small-cap"><span class="hide-menu">Staff</span></li>
+
+                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                            class="hide-menu">Staff List 
+                                        </span></a>
+                                </li>';
+                            }
+                        endcode-->
+
+                        <!--php-code 
+                            if ('{user.role}' === 'staff') 
+                            {
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
+                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                    class="hide-menu">Dashboard</span></a></li>
+                                <li class="list-divider"></li>
+                                <li class="nav-small-cap"><span class="hide-menu">Lists</span></li>
+
+                                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index#zero_config"
+                                        aria-expanded="false"><i class="fas fa-users"></i><span
+                                            class="hide-menu">Sellers 
+                                        </span></a>
+                                </li>
+                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu"><i class="fas fa-gift"></i> Gift Cards </span></a>
+                                <ul aria-expanded="false" class="collapse first-level base-level-line">
+                                    <li class="sidebar-item"><a href="giftcards" class="sidebar-link"><span class="hide-menu"> Active
+                                            </span></a>
+                                    </li>
+                                    <li class="sidebar-item"><a href="giftcards?redeemed" class="sidebar-link"><span class="hide-menu"> Redeemed
+                                            </span></a>
+                                    </li>
+                                </ul>
+                            </li>';
+                            }
+                        endcode-->
+
+                        <!--php-code 
+                            if ('{user.role}' === 'seller') 
+                            {
+                                return '<li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index"
+                                aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                    class="hide-menu">Dashboard</span></a></li>
+                                <li class="list-divider"></li>
+                                <li class="nav-small-cap"><span class="hide-menu">Gift Cards</span></li>
+
+                                <li class="sidebar-item"> <a class="sidebar-link" href=""
+                                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                            class="hide-menu">Gift Card List 
+                                        </span></a>
+                                </li>';
+                            }
+                        endcode-->
+                        
+                        <li class="list-divider"></li>
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index?logout"
+                                aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
+                                    class="hide-menu">Logout</span></a></li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        
+        <div class="page-wrapper">
+            <!--php-code 
+                if ('{error.notification}' !== '')
+                    {
+                        return '<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <strong>Error - </strong> {error.notification}
+                                </div>';
+                    } 
+                endcode-->
+                <!--php-code 
+                    if ('{success.notification}' !== '')
+                    {
+                        return '<div class="alert alert-success" role="alert">
+                                    <strong>Success - </strong> {success.notification}
+                                </div>';
+                    } 
+            endcode-->
+            <div id="newuser-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h2>{user.modal.title} Details</h2>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post">
+
+                                <div class="form-group">
+                                    <label for="username">Name</label>
+                                    <input class="form-control" type="text" id="username"
+                                        required="" placeholder="Cedric Maenetja" name="name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailaddress">Email address</label>
+                                    <input class="form-control" type="email" id="emailaddress"
+                                        required="" placeholder="cedric@deo.com" name="email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input class="form-control" type="password" required="" minlength="6"
+                                        id="password" placeholder="Enter your password" name="pwd">
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="addUser">Create User</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div id="myprofile-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h2>My Details</h2>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post">
+                                <div class="form-group">
+                                    <label for="username">Name</label>
+                                    <input class="form-control" type="text" id="username"
+                                        required="" name="name" value="{user.fname} {user.lname}" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailaddress">Email address</label>
+                                    <input class="form-control" type="email" id="emailaddress"
+                                        required="" value="{user.email}" name="email" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Change Password</label>
+                                    <input class="form-control" type="password" required="" minlength="6"
+                                        id="password" placeholder="Enter new password" name="pwd">
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="updatePwd">Save Changes</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div id="newcard-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <h3>{user.modal.title} Details</h3>
+                            </div>
+
+                            <form class="pl-3 pr-3" action="#" method="post">
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input class="form-control" type="text" id="title" required="" placeholder="Enter title" name="title" minlength="4" maxlength="30">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="desc">Description</label>
+                                    <textarea class="form-control" maxlength="200" placeholder="Enter description" id="desc" name="desc"></textarea>
+                                </div>
+                                <br/>
+                                <div class="row" style="background-color: #f4f8fb;">
+                                    <div class="col-lg-3">
+                                        <div class="grid-container">
+                                            <div class="form-group">
+                                                <label for="qty">Quantity</label>
+                                                <input id="qty" class="form-control" type="number" required="" placeholder="e.g 200" name="qty">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="grid-container">
+                                            <div class="form-group">
+                                                <label for="price">Price per GiftCard ($)</label>
+                                                <input id="price" class="form-control" type="text" required="" placeholder="e.g 200" name="price">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="grid-container">
+                                            <div class="form-group">
+                                                <label for="color">Card Color</label>
+                                                <input id="color" class="form-control" type="color" name="color">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="grid-container">
+                                            <div class="form-group">
+                                                <label for="date">Expiry Date</label>
+                                                <input id="date" class="form-control" type="date" name="date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="grid-container">
+                                            <small>This user will have access to this gift card.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="grid-container">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text" for="inputGroupSelect01">Assign To:</label>
+                                                </div>
+                                                <select class="custom-select" id="inputGroupSelect01" name="assignee">
+                                                    <option selected="">Choose ...</option>
+                                                    <%=list dataset="allsellers"
+                                                    <option value="{seller.id}">{seller.name} {seller.lname} ({seller.email})</option>
+                                                    =%>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" name="createCard">Create Gift Card</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Active Gift Cards</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="index">Dashboard</a>
+                                    </li>
+                                    <li class="breadcrumb-item text-muted active" aria-current="page">Gift Cards</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-right">
+                            <select class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
+                                <option selected>{current.month} {current.day}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <div class="row">
+                    <!--php-code
+                        if ('{total.giftcards}')
+                        {
+                            return '<div class="col-lg-12">
+                                <div class="grid-container">
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        No Gift Cards created yet!
+                                    </div>
+                                </div>
+                            </div>';
+                        }
+                    endcode-->
+                    
+                    <%=list dataset="giftcards"
+                    <div class="col-md-4">
+                        <div class="card text-white bg-dark" style="background-color: {card.color} !important;">
+                            <div class="card-header">
+                                <h4 class="mb-0 text-white">{card.title}</h4>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title text-white">${card.price} /<small>{card.qty}</small></h3>
+                                <p class="card-text">{card.description}</p>
+                                <div class="giftcard_buttons">
+                                    <small><i class="fa fa-user"></i>
+                                        {card.sellerfname} {card.sellerlname} &nbsp; 
+                                        <a id="edit{card.id}" href="javascript:assignUser('{card.id}')" style="color: white;" title="click to assign a new user"><i class="fa fa-edit"></i></a>
+                                        <a id="close{card.id}" href="javascript:hideUsers('{card.id}')" style="color: white;margin-left:8px;display: none;" title="close dropdown"><i class="fa fa-close"></i></a>
+                                        <div id="card{card.id}" style="display: none;">
+                                            <form class="mt-4" action="" method="post" id="form{card.id}">
+                                                <input name="card" value="{card.id}" type="hidden"/>
+                                                <input name="title" value="{card.title}" type="hidden"/>
+                                                <div class="input-group">
+                                                    <select class="custom-select" id="dropdown{card.id}" name="assignuser" onchange="this.form.submit()">
+                                                        <option selected="">Choose...</option>
+                                                        <option value="0">Leave Unassigned</option>
+                                                        {allsellers}
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </small><br/>
+                                    <small><i class="fa fa-calendar"></i> exp. {card.expiry_date}</small>
+                                    <small style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="{card.status.msg}"><!--php-code return ('{card.status}' != 'freeze') ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>'; endcode-->
+                                        <form style="display: inline;margin-left:-6px" method="post" action="">
+                                            <input type="hidden" value="{card.voucherno}" name="cardid">
+                                            <input type="hidden" value="{card.sellerid}" name="userid">
+                                            <input type="hidden" value="{card.title}" name="title">
+                                            <input type="submit" style="background:transparent;border:none;color: white;" name="{card.status}" value="{card.status}">
+                                        </form>
+                                    </small>
+                                    <small style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="delete card"><i class="fa fa-trash"></i> 
+                                        <form style="display: inline;margin-left:-6px" method="post" action="">
+                                            <input type="hidden" value="{card.voucherno}" name="cardid">
+                                            <input type="submit" style="background:transparent;border:none;color: white;" name="deletecard" value="delete">
+                                        </form>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    =%>
+                </div>
+                <!-- *************************************************************** -->
+                <!-- End Top Leader Table -->
+                <!-- *************************************************************** -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center text-muted">
+                All Rights Reserved by GiftAdmin. Designed and Developed by <a
+                    href="">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="src/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="src/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="src/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="src/dist/js/app-style-switcher.js"></script>
+    <script src="src/dist/js/feather.min.js"></script>
+    <script src="src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="src/dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="src/dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <script src="src/assets/extra-libs/c3/d3.min.js"></script>
+    <script src="src/assets/extra-libs/c3/c3.min.js"></script>
+    <script src="src/assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="src/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="src/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="src/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="src/dist/js/pages/dashboards/dashboard1.min.js"></script>
+
+    <script>
+        function assignUser(id){
+            $('#card'+id).css('display', 'block');
+            $('#close'+id).css('display', 'inline');
+        }
+
+        function hideUsers (id){
+            $('#card'+id).css('display', 'none');
+            $('#close'+id).css('display', 'none');
+        }
+
+        function updateUser(formid){
+            $('#'+formid).submit();
+        }
+    </script>
+</body>
+
+</html>

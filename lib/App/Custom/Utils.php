@@ -37,6 +37,29 @@
             //date_default_timezone_set ('America/Los_Angeles'); // using server time
             return date ('H', time());
         }
+
+        public static function generateCode ($limit)
+        {
+            $code = '';
+            for($i = 0; $i < $limit; $i++) 
+            { 
+                $code .= ($i % 4 == 0) ? '-'.mt_rand(0, 9) : mt_rand(0, 9);
+            }
+            
+            return ltrim($code, $code[0]);
+        }
+
+        public static function compress_image ($source_url, $destination_url, $quality)
+        {
+            $info = getimagesize ($source_url);
+    
+            if ($info['mime'] == 'image/jpeg') $image = imagecreatefromjpeg ($source_url);
+            elseif ($info['mime'] == 'image/gif') $image = imagecreatefromgif ($source_url);
+            elseif ($info['mime'] == 'image/png') $image = imagecreatefrompng ($source_url);
+            elseif ($info['mime'] == 'image/webp') $image = imagecreatefromwebp ($source_url);
+            
+            imagejpeg ($image, $destination_url, $quality);
+        }
     }
 
 ?>

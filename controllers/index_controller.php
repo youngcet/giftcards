@@ -71,6 +71,65 @@
 			return $record;
 		}
 
+		public function UpdateMainCardNumberExist ($currentcardnumber, $cardnumber, $cardid, $sellerid)
+		{
+			$cardexists = $this->isMainCardNumberExist ($sellerid, $cardnumber);
+			if (App\Custom\Error::IsAnError ($cardexists))
+			{
+				return $cardexists;
+			}
+
+			if ($cardexists)
+			{
+				return new App\Custom\Error (-1, App\Constants::CARD_NUMBER_EXISTS);
+			}
+
+			$sql = $this->db_handler->prepareStatement (UPDATE_MAIN_GIFTCARD_CARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardnumber, $cardid, $sellerid], 'sii');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->prepareStatement (UPDATE_SELLER_MAIN_GIFTCARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardnumber, $currentcardnumber, $sellerid], 'ssi');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			return 1;
+		}
+
+		public function isMainCardNumberExist ($id, $cardid)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_MAIN_GIRDCARD_BY_CARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id, $cardid], 'is');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			$rows = $this->db_handler->fetchRow();
+
+			return (! empty ($rows)) ? true : false;
+		}
+
 		public function GetTotalGiftCards ($adminid)
 		{
 			$sql = $this->db_handler->prepareStatement (SELECT_ALL_GIFTCARDS);
@@ -159,6 +218,46 @@
 			return $record;
 		}
 
+		public function UpdateUserProfileImg ($role, $img, $id)
+		{
+			if ($role == App\Constants::ADMIN) $sql = $this->db_handler->prepareStatement (UPDATE_ADMIN_PROFILE_IMG);
+			if ($role == App\Constants::STAFF) $sql = $this->db_handler->prepareStatement (UPDATE_STAFF_PROFILE_IMG);
+			if ($role == App\Constants::SELLER) $sql = $this->db_handler->prepareStatement (UPDATE_SELLER_PROFILE_IMG);
+
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$img, $id], 'si');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function SelectUserInfo ($role, $id)
+		{
+			if ($role == App\Constants::ADMIN) $sql = $this->db_handler->prepareStatement (SELECT_ADMIN_USER_BY_ID);
+			if ($role == App\Constants::STAFF) $sql = $this->db_handler->prepareStatement (SELECT_STAFF);
+			if ($role == App\Constants::SELLER) $sql = $this->db_handler->prepareStatement (SELECT_SELLER);
+
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchRow();
+		}
+
 		public function GetAllSellers ($id)
 		{
 			$allsellers = $this->db_handler->prepareStatement (SELECT_ALL_SELLERS);
@@ -195,6 +294,23 @@
 			$record = $this->db_handler->fetchRow();
 
 			return $record;
+		}
+
+		public function SelectSellerGiftCard ($cardid, $id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_NON_REDEEMED_CARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardid, $id], 'si');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchRow();
 		}
 
 		public function GetTotalSellerGiftCards ($id)
@@ -302,7 +418,7 @@
 			return 1;
 		}
 
-		public function SellCard ($id, $sellerid, $price)
+		public function RedeemCard ($id, $redeem)
 		{
 			$sql = $this->db_handler->prepareStatement (SELL_GIFTCARD);
 			if (App\Custom\Error::IsAnError ($sql))
@@ -310,23 +426,23 @@
 				return $sql;
 			}
 
-			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			$sql = $this->db_handler->executeStatement ([$redeem, $id], 'ii');
 			if (App\Custom\Error::IsAnError ($sql))
 			{
 				return $sql;
 			}
 			
-			$sql = $this->db_handler->prepareStatement (UPDATE_GIFTCARD_TO_SOLD);
-			if (App\Custom\Error::IsAnError ($sql))
-			{
-				return $sql;
-			}
+			// $sql = $this->db_handler->prepareStatement (UPDATE_GIFTCARD_TO_SOLD);
+			// if (App\Custom\Error::IsAnError ($sql))
+			// {
+			// 	return $sql;
+			// }
 
-			$sql = $this->db_handler->executeStatement ([$price, $sellerid], 'ii');
-			if (App\Custom\Error::IsAnError ($sql))
-			{
-				return $sql;
-			}
+			// $sql = $this->db_handler->executeStatement ([$price, $sellerid], 'ii');
+			// if (App\Custom\Error::IsAnError ($sql))
+			// {
+			// 	return $sql;
+			// }
 
 			return 1;
 		}
@@ -359,6 +475,134 @@
 				return $sql;
 			}
 
+			return 1;
+		}
+
+		public function SellerGiftCards ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_ALL_SELLER_GIFTCARDS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchAll();
+		}
+
+		public function SelectNotifications ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_NOTIFICATIONS);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return $this->db_handler->fetchAll();
+		}
+
+		public function RedeemQuestRequestCard ($qty_sold, $qty, $maincardnumber, $cardid, $userid)
+		{
+			$sql = $this->db_handler->prepareStatement (REDEEM_CARD);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardid, $userid], 'ii');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+            $sql = $this->RedeemMainCard ($qty_sold, $qty, $maincardnumber, $userid);
+            if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function RedeemMainCard ($qty_sold, $qty, $cardnumber, $userid)
+		{
+			$sql = $this->db_handler->prepareStatement (REDEEM_MAIN_GIFTCARD);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$qty_sold, $qty, $cardnumber, $userid], 'iisi');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function InsertGuestUserRequest ($seller_id, $card_number, $guestname, $email, $data)
+		{
+			$sql = $this->db_handler->prepareStatement (INSERT_REQUEST);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$seller_id, $card_number, $guestname, $email, $data], 'issss');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function DeleteUser ($type, $id)
+		{
+			if ($type == App\Constants::STAFF) $query = DELETE_STAFF;
+			if ($type == App\Constants::SELLER) $query = DELETE_SELLER;
+
+			$sql = $this->db_handler->prepareStatement ($query);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			return 1;
+		}
+
+		public function DeleteNotification ($id)
+		{
+			$sql = $this->db_handler->prepareStatement (DELETE_NOTIFICATION);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id], 'i');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
 			return 1;
 		}
 	}
