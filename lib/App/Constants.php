@@ -36,6 +36,7 @@
         const HTML_PAGES_DIR = 'src/html/';
         const USER_IMG_DIR = 'src/assets/images/users/';
         const DEFAULT_USER_PROFILE_IMG = 'src/assets/images/users/user.png';
+        const QR_CODES_IMG_DIR = 'src/assets/images/qrcodes/';
 
         const ERROR_NOTIFICATION_HTML = '{error.notification}';
         const REGISTRATION_NOTIFICATION_HTML = '{registration.success}';

@@ -306,6 +306,35 @@
                                 </div>';
                     } 
             endcode-->
+            <div id="myModal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block; padding-right: 17px;" aria-modal="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Modal Heading</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Text in a modal</h6>
+                            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+                            <hr>
+                            <h6>Overflowing text to show scroll behavior</h6>
+                            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                                dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
+                                ac consectetur ac, vestibulum at eros.</p>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+                                Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
+                                auctor.</p>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
+                                cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
+                                dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
             <div id="newuser-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -376,6 +405,10 @@
                                         return '<div class="form-group">
                                             <label for="emailaddress">Seller ID</label>
                                             <input class="form-control" type="text" id="sellerid" value="{user.account_number}" name="sellerid" disabled>
+                                            <div style="border-radius:2%;border:0.5px solid #d2d2d2">
+                                                <img src="{user.account_number.qrcode}" alt="Seller ID"/>
+                                                <small>scan QR Code for Seller ID</small>
+                                            </div>
                                         </div>';
                                     }
                                 endcode-->
@@ -808,11 +841,12 @@
                                                 <thead>
                                                     <tr class="border-0">
                                                         <th class="border-0 font-14 font-weight-medium text-muted"></th>
-                                                         <th class="border-0 font-14 font-weight-medium text-muted">Group No.</th>
+                                                         <th class="border-0 font-14 font-weight-medium text-muted" style="width:92px">Group No.</th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Description</th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Quantity</th>
                                                         <th class="border-0 font-14 font-weight-medium text-muted">Sold</th>
                                                          <th class="border-0 font-14 font-weight-medium text-muted">Expiring On</th>
+                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -822,11 +856,14 @@
                                                                 <h5 class="text-dark mb-0 font-16 font-weight-medium"> <a title="click to view gift cards" href="list?group={card.number}">{card.title}</a></h5>
                                                                 <span class="text-muted font-14">${card.price}</span><br/>
                                                             </td>
-                                                            <td class="border-top-0 text-muted px-2 py-4 font-14">{card.number}</td>
+                                                            <td class="border-top-0 text-muted px-2 py-4 font-14"><form action="" method="post" id="form-{card.id}"><input type="hidden" value="{card.id}" name="id">
+                                                                <input type="hidden" value="" name="updatemaincardnumber"><input type="hidden" value="{card.number}" name="oldcardnumber"><input required placeholder="1234-5678-9101-1123" type="text" class="form-control" value="{card.number}" name="card_number" maxlength="19" minlength="10">
+                                                                    <a id="upt_{card.id}" href="javascript:updateMainCardNumber({card.id})" style="border: none;background:transparent;color: #5f76e8;margin-left:5px">update</a></form></td>
                                                             <td class="border-top-0 text-muted px-2 py-4 font-14">{card.description}</td>
                                                             <td class="border-top-0 text-muted px-2 py-4 font-14">{card.qty}</td>
                                                             <td class="border-top-0 text-muted px-2 py-4 font-14">{card.qtysold}</td>
                                                             <td class="font-weight-medium text-dark border-top-0 px-2 py-4">{card.expirydate}</td>
+                                                            <td>{print.giftcards.layout}</td>
                                                         </tr>
                                                     =%>
                                                 </tbody>
@@ -915,6 +952,14 @@
 
             setTimeout(function() {
                 window.location.href = 'index';
+            }, 300);
+        }
+
+        function updateMainCardNumber(id){
+            $('#upt_'+id).html('<i class="fas fa-spinner fa-spin"></i>');
+
+            setTimeout(function() {
+                $('form#form-'+id).submit();
             }, 300);
         }
     </script>

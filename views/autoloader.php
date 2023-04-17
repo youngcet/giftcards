@@ -1,6 +1,7 @@
 <?php
 
     include '_inc/sql_queries.inc';
+    include ('qrcodes/qrlib.php');
 
     spl_autoload_register (function ($class_name) {
         // load classes with namespaces in lib

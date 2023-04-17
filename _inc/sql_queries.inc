@@ -53,12 +53,14 @@
     define ('SELECT_GIRDCARD_BY_CARDNO', 'SELECT card_number FROM giftcards WHERE card_number = ?');
     define ('SELECT_MAIN_GIRDCARD_BY_CARDNO', 'SELECT * FROM giftcards WHERE seller_id = ? AND card_number = ?');
     define ('UPDATE_MAIN_GITFTCARD_STATUS', 'UPDATE giftcards SET status = ? WHERE card_number = ?');
+    define ('UPDATE_MAIN_GIFTCARD_CARDNO', 'UPDATE giftcards SET card_number = ? WHERE id = ? AND seller_id = ?');
 
     define ('INSERT_SELLER_GIFTCARD', 'INSERT INTO seller_giftcards (card_id, seller_id, card_number, title, description, price, status, expiry_date) VALUES (?,?,?,?,?,?,?,?)');
     define ('SELECT_SELLER_GIFTCARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ?');
     define ('SELECT_NON_REDEEMED_CARDS', 'SELECT * FROM seller_giftcards WHERE card_id = ? AND seller_id = ? AND status = "active"');
     define ('CHECK_IF_GIFTCARD_NUMBER_EXISTS', 'SELECT id FROM seller_giftcards WHERE card_id = ? AND card_number = ? AND seller_id = ?');
     define ('UPDATE_GIFTCARD_CARDNO', 'UPDATE seller_giftcards SET card_number = ? WHERE id = ? AND seller_id = ?');
+    define ('UPDATE_SELLER_MAIN_GIFTCARDNO', 'UPDATE seller_giftcards SET card_id = ? WHERE card_id = ? AND seller_id = ?');
     define ('REDEEM_CARD', 'UPDATE seller_giftcards SET status = "redeemed" WHERE id = ? AND seller_id = ?');
     define ('UPDATE_GITFTCARD_STATUS', 'UPDATE seller_giftcards SET status = ? WHERE card_id = ? AND seller_id = ?');
 

@@ -28,5 +28,11 @@
             
 			return $htmlstring;
         }
+
+        public function ParseHTMLFile ($html, $data)
+        {
+            $htmlparser = new App\Custom\HTMLParser (file_get_contents ($html), $data);
+			return $htmlparser->GetSubstitutedString();
+        }
     }
 ?>

@@ -260,6 +260,26 @@
 				
 			}
 
+			if (isset ($_POST['updatemaincardnumber']))
+			{
+				$cardid = strip_tags (trim ($_POST['id']));
+				$cardnumber = strip_tags (trim ($_POST['card_number']));
+				$currentcardnumber = strip_tags (trim ($_POST['oldcardnumber']));
+				
+				if (! empty ($cardnumber) && ! empty ($cardid))
+				{
+					$updatemaincard = $this->controller->UpdateMainCardNumberExist ($currentcardnumber, $cardnumber, $cardid, $_SESSION['userid']);
+					if (App\Custom\Error::IsAnError ($updatemaincard))
+					{
+						$data[App\Constants::ERROR_NOTIFICATION_HTML] = $updatemaincard->GetError();
+					}
+					else 
+					{
+						$data[App\Constants::SUCCESS_NOTIFICATION_HTML] = App\Constants::CHANGES_SAVED;
+					}
+				}
+			}
+
 			// check user role and build the data structure
 			if ($userrole == App\Constants::ADMIN)
 			{
@@ -384,6 +404,11 @@
 			if ($userrole == App\Constants::SELLER)
 			{
 				$data['{user.modal.title}'] = ucfirst (App\Constants::GIFTCARD);
+				$selleridqrcode = App\Constants::QR_CODES_IMG_DIR.$userinfo['id'].'.png';
+				if (! file_exists ($selleridqrcode)) QRcode::png ('SELLER ID: '.$userinfo['id'], $selleridqrcode);
+
+				$data['{user.account_number.qrcode}'] = $selleridqrcode;
+				$data['{print.giftcards.layout}'] = $this->model->ParseHTMLFile (App\Constants::HTML_PAGES_DIR.'printgiftcards.html', $data);
 
 				$notifications = $this->controller->SelectNotifications ($_SESSION['userid']);
 				foreach ($notifications as $notification)

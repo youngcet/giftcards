@@ -71,6 +71,65 @@
 			return $record;
 		}
 
+		public function UpdateMainCardNumberExist ($currentcardnumber, $cardnumber, $cardid, $sellerid)
+		{
+			$cardexists = $this->isMainCardNumberExist ($sellerid, $cardnumber);
+			if (App\Custom\Error::IsAnError ($cardexists))
+			{
+				return $cardexists;
+			}
+
+			if ($cardexists)
+			{
+				return new App\Custom\Error (-1, App\Constants::CARD_NUMBER_EXISTS);
+			}
+
+			$sql = $this->db_handler->prepareStatement (UPDATE_MAIN_GIFTCARD_CARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardnumber, $cardid, $sellerid], 'sii');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->prepareStatement (UPDATE_SELLER_MAIN_GIFTCARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$cardnumber, $currentcardnumber, $sellerid], 'ssi');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			return 1;
+		}
+
+		public function isMainCardNumberExist ($id, $cardid)
+		{
+			$sql = $this->db_handler->prepareStatement (SELECT_MAIN_GIRDCARD_BY_CARDNO);
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+
+			$sql = $this->db_handler->executeStatement ([$id, $cardid], 'is');
+			if (App\Custom\Error::IsAnError ($sql))
+			{
+				return $sql;
+			}
+			
+			$rows = $this->db_handler->fetchRow();
+
+			return (! empty ($rows)) ? true : false;
+		}
+
 		public function GetTotalGiftCards ($adminid)
 		{
 			$sql = $this->db_handler->prepareStatement (SELECT_ALL_GIFTCARDS);
